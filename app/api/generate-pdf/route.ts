@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { HTMLPDFGenerator } from '../../../lib/pdf/html-generator';
+import { PDFGenerator } from '../../../lib/pdf/generator';
 import { BusinessCardData } from '../../../types/business-card';
 import { validateBusinessCard } from '../../../utils/validation';
 import { uploadFileWithMetadata } from '../../../lib/storage/file-manager';
@@ -23,13 +23,17 @@ export async function POST(request: NextRequest) {
     // Get options from request
     const includeBleed = body.includeBleed || false;
     
-    // Create PDF generator
-    const generator = new HTMLPDFGenerator({
-      includeBleed
+    // Create PDF generator with PDFKit (more compatible with serverless)
+    const generator = new PDFGenerator({
+      includeBleed,
+      design: 'design1'
     });
 
     // Generate PDF
-    const pdfBuffer = await generator.generatePDF(businessCardData);
+    const pdfBuffer = await generator
+      .generateFront(businessCardData)
+      .generateBack(businessCardData)
+      .getBuffer();
 
     // Create filename
     const filename = `CBRE-BusinessCard-${businessCardData.fullName.replace(/\s+/g, '-')}-${new Date().toISOString().split('T')[0]}.pdf`;
