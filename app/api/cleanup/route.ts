@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { cleanupExpiredFilesAndMetadata, getFileStatistics } from '../../../lib/storage/file-manager';
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   try {
     // Optional: Add authentication check here
     // const apiKey = request.headers.get('Authorization');
@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
   }
 }
 
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     // Return current file statistics
     const stats = getFileStatistics();

@@ -1,20 +1,16 @@
 "use client";
 
 import { useState } from 'react';
-import { CBREButton } from "@/src/components/cbre/CBREButton";
 import { CBREStyledCard } from "@/src/components/cbre/CBREStyledCard";
 import { CBRETabs } from "@/src/components/cbre/CBRETabs";
 import { TabsList, TabsTrigger, TabsContent } from "@/src/components/ui/tabs";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/src/components/ui/card";
 import { Badge } from "@/src/components/ui/badge";
 import { CardEditor } from "@/src/components/business-card/CardEditor";
 import { CSVUploader } from "@/src/components/business-card/CSVUploader";
-import { FileText, Upload, Download, Zap } from "lucide-react";
+import { FileText, Upload } from "lucide-react";
 
 export default function Home() {
-  const [activeTab, setActiveTab] = useState("single");
-
-  const handleBatchSuccess = (data: any) => {
+  const handleBatchSuccess = (data: unknown) => {
     console.log('Batch generated:', data);
   };
 

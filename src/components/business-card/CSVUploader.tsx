@@ -5,12 +5,11 @@ import { useDropzone } from 'react-dropzone';
 import Papa from 'papaparse';
 import { CBREButton } from "@/src/components/cbre/CBREButton";
 import { CBREStyledCard } from "@/src/components/cbre/CBREStyledCard";
-import { CBREBadge } from "@/src/components/cbre/CBREBadge";
 import { Checkbox } from "@/src/components/ui/checkbox";
 import { toast } from "@/src/components/cbre/CBREToast";
 import { validateCSVData, validateFileUpload } from "@/utils/validation";
 import { BusinessCardData, CSVValidationResult } from "@/types/business-card";
-import { API_ENDPOINTS, FILE_SETTINGS } from "@/utils/constants";
+import { FILE_SETTINGS } from "@/utils/constants";
 import { 
   Upload, 
   Download, 
@@ -37,7 +36,7 @@ export function CSVUploader({ onSuccess, onError }: CSVUploaderProps) {
   const [progress, setProgress] = useState(0);
   const [currentStep, setCurrentStep] = useState<string>('');
 
-  const onDrop = useCallback((acceptedFiles: File[], rejectedFiles: any[]) => {
+  const onDrop = useCallback((acceptedFiles: File[], rejectedFiles: unknown[]) => {
     if (rejectedFiles.length > 0) {
       toast({
         title: "File Rejected",
