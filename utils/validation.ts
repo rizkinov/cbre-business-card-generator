@@ -51,7 +51,7 @@ export const businessCardFormSchema = businessCardSchema.extend({
 /**
  * Validate a single business card data object
  */
-export function validateBusinessCard(data: any): { isValid: boolean; errors: ValidationError[]; data?: BusinessCardData } {
+export function validateBusinessCard(data: unknown): { isValid: boolean; errors: ValidationError[]; data?: BusinessCardData } {
   try {
     const validatedData = businessCardSchema.parse(data);
     return {
@@ -105,23 +105,23 @@ export function validateCSVStructure(headers: string[]): ValidationError[] {
 /**
  * Convert CSV row to BusinessCardData
  */
-export function csvRowToBusinessCardData(row: any): BusinessCardData {
+export function csvRowToBusinessCardData(row: Record<string, unknown>): BusinessCardData {
   return {
-    fullName: row['Full Name'] || '',
-    title: row['Title'] || '',
-    licenseNumber: row['License Number'] || '',
-    officeName: row['Office Name'] || '',
-    officeAddress: row['Office Address'] || '',
-    email: row['Email'] || '',
-    telephone: row['Telephone'] || '',
-    mobile: row['Mobile'] || '',
+    fullName: String(row['Full Name'] || ''),
+    title: String(row['Title'] || ''),
+    licenseNumber: String(row['License Number'] || ''),
+    officeName: String(row['Office Name'] || ''),
+    officeAddress: String(row['Office Address'] || ''),
+    email: String(row['Email'] || ''),
+    telephone: String(row['Telephone'] || ''),
+    mobile: String(row['Mobile'] || ''),
   };
 }
 
 /**
  * Validate CSV data
  */
-export function validateCSVData(csvData: any[]): CSVValidationResult {
+export function validateCSVData(csvData: unknown[]): CSVValidationResult {
   const errors: ValidationError[] = [];
   const validData: BusinessCardData[] = [];
   
@@ -152,7 +152,8 @@ export function validateCSVData(csvData: any[]): CSVValidationResult {
   
   // Validate each row
   csvData.forEach((row, index) => {
-    const rowData = csvRowToBusinessCardData(row);
+    // Type assertion for CSV row data
+    const rowData = csvRowToBusinessCardData(row as Record<string, unknown>);
     const validation = validateBusinessCard(rowData);
     
     if (!validation.isValid) {

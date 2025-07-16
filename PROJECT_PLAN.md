@@ -1,7 +1,7 @@
 # CBRE Business Card Editor - Project Plan & Checklist
 
 ## 🎯 Project Overview
-A web-based CBRE business card editor that generates print-ready CMYK PDFs via form input or CSV batch upload. Built using the existing CBRE Web Elements library as the UI foundation.
+A web-based CBRE business card editor that generates print-ready CMYK PDFs via form input or CSV batch upload. Built with React, Next.js, and a custom CBRE design system.
 
 ## 📋 Project Specifications
 
@@ -39,7 +39,7 @@ A web-based CBRE business card editor that generates print-ready CMYK PDFs via f
 
 ```
 /components/
-  ├── ui/                    # Existing cbre-web-elements components
+  ├── ui/                    # Base UI components (shadcn/ui)
   ├── business-card/         # New business card specific components
   │   ├── CardEditor.tsx     # Main editor interface
   │   ├── CSVUploader.tsx    # CSV upload interface
@@ -93,7 +93,7 @@ A web-based CBRE business card editor that generates print-ready CMYK PDFs via f
 
 ### Phase 1: Project Setup & Cleanup ✅
 - [x] ✅ Repository cloned and initialized
-- [x] ✅ Remove legacy cbre-web-elements demo content
+- [x] ✅ Remove legacy demo content and example pages
 - [x] ✅ Update README.md to reflect new purpose
 - [x] ✅ Set up project structure
 - [x] ✅ Configure Supabase integration

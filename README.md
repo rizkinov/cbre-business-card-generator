@@ -1,6 +1,6 @@
 # CBRE Business Card Editor
 
-A professional web-based business card editor that generates print-ready CMYK PDFs for CBRE employees. Built with React, Next.js, and the CBRE Web Elements design system.
+A professional web-based business card editor that generates print-ready CMYK PDFs for CBRE employees. Built with React, Next.js, and a custom CBRE design system.
 
 ## 🎯 Features
 
@@ -23,8 +23,8 @@ A professional web-based business card editor that generates print-ready CMYK PD
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/rizkinov/cbre-business-card-editor.git
-   cd cbre-business-card-editor
+   git clone https://github.com/rizkinov/cbre-business-card-generator.git
+   cd cbre-business-card-generator
    ```
 
 2. **Install dependencies**
@@ -108,7 +108,7 @@ Jane Smith,Sales Assistant,1234AB,CBRE Singapore,"2 Tanjong Katong Rd, #06-01 Pa
 ## 🔧 Technical Stack
 
 - **Frontend**: React 19 + Next.js 15
-- **Styling**: Tailwind CSS 4.0 + CBRE Web Elements
+- **Styling**: Tailwind CSS 4.0 + Custom CBRE Design System
 - **PDF Generation**: PDFKit
 - **File Storage**: Supabase Storage
 - **Form Handling**: React Hook Form + Zod
@@ -118,7 +118,7 @@ Jane Smith,Sales Assistant,1234AB,CBRE Singapore,"2 Tanjong Katong Rd, #06-01 Pa
 ## 📁 Project Structure
 
 ```
-cbre-business-card-editor/
+cbre-business-card-generator/
 ├── app/                    # Next.js app directory
 │   ├── page.tsx           # Main application page
 │   └── api/               # API routes

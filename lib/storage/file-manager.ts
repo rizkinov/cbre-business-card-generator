@@ -149,7 +149,8 @@ export async function cleanupExpiredFilesAndMetadata(): Promise<void> {
   // Also run the general cleanup
   await cleanupExpiredFiles();
 
-  console.log(`Cleaned up ${expiredFiles.length} expired files`);
+  // Log successful cleanup for monitoring purposes
+  console.info(`Cleaned up ${expiredFiles.length} expired files`);
 }
 
 /**

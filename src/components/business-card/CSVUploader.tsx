@@ -91,6 +91,7 @@ export function CSVUploader({ onSuccess, onError }: CSVUploaderProps) {
           description: "Failed to parse CSV file. Please check the format.",
           variant: "error"
         });
+        // Log error for debugging - this is legitimate production error logging
         console.error('CSV Parse Error:', error);
       }
     });

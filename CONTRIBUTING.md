@@ -1,6 +1,6 @@
-# Contributing to CBRE Web Elements
+# Contributing to CBRE Business Card Generator
 
-Thank you for your interest in contributing to CBRE Web Elements! This document provides guidelines and instructions for contributing to this project.
+Thank you for your interest in contributing to CBRE Business Card Generator! This document provides guidelines and instructions for contributing to this project.
 
 ## Table of Contents
 
@@ -20,19 +20,19 @@ We are committed to providing a welcoming and inclusive environment. All partici
 ## Getting Started
 
 1. Fork the repository
-2. Clone your fork: `git clone https://github.com/YOUR-USERNAME/cbre-web-elements.git`
-3. Add the upstream repository: `git remote add upstream https://github.com/YOUR-USERNAME/cbre-web-elements.git`
+2. Clone your fork: `git clone https://github.com/YOUR-USERNAME/cbre-business-card-generator.git`
+3. Add the upstream repository: `git remote add upstream https://github.com/YOUR-USERNAME/cbre-business-card-generator.git`
 4. Install dependencies: `npm install`
 5. Create a branch for your changes: `git checkout -b feature/your-feature-name`
 
 ## Development Workflow
 
 1. Start the development server: `npm run dev`
-2. Visit http://localhost:3000 to see the example pages
+2. Visit http://localhost:3000 to see the business card generator
 3. Make your changes to components or documentation
 4. Test your changes thoroughly:
    - Run type checking: `npm run type-check`
-   - Build the library: `npm run build:lib`
+   - Build the application: `npm run build`
    - Run validation: `npm run validate`
 5. Commit your changes with descriptive commit messages
 
@@ -74,10 +74,7 @@ All components should:
    - CBRE-branded components: `src/components/cbre/`
    - Block components: `src/components/blocks/`
 
-2. Use the component generator when possible:
-   ```bash
-   npm run generateComp
-   ```
+2. Follow the existing component patterns and structure
 
 3. Follow the naming conventions:
    - UI components: PascalCase (e.g., `button.tsx`)
@@ -123,4 +120,4 @@ We encourage writing tests for all components:
    - Test the build process: `npm run build:lib`
    - Run complete validation: `npm run validate`
 
-Thank you for contributing to CBRE Web Elements! 
+Thank you for contributing to CBRE Business Card Generator! 

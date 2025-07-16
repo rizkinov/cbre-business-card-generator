@@ -116,7 +116,8 @@ export async function cleanupExpiredFiles(): Promise<void> {
     if (deleteError) {
       console.error('Error deleting expired files:', deleteError);
     } else {
-      console.log(`Cleaned up ${expiredFiles.length} expired files`);
+      // Log successful cleanup for monitoring purposes
+      console.info(`Cleaned up ${expiredFiles.length} expired files`);
     }
   }
 } 

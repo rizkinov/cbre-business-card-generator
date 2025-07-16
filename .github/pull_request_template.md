@@ -27,5 +27,5 @@ Please describe the tests that you ran to verify your changes. Provide instructi
 - [ ] I have added tests that prove my fix is effective or that my feature works
 - [ ] New and existing unit tests pass locally with my changes
 - [ ] TypeScript compilation passes (`npm run type-check`)
-- [ ] Library builds successfully (`npm run build:lib`)
+- [ ] Application builds successfully (`npm run build`)
 - [ ] All validation checks pass (`npm run validate`) 

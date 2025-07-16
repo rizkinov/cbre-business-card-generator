@@ -11,11 +11,11 @@ import { FileText, Upload } from "lucide-react";
 
 export default function Home() {
   const handleBatchSuccess = (data: unknown) => {
-    console.log('Batch generated:', data);
+    // Success handled by component toast notifications
   };
 
   const handleError = (error: string) => {
-    console.error('Error:', error);
+    // Error handled by component toast notifications
   };
 
   return (
@@ -95,7 +95,7 @@ export default function Home() {
           <div className="text-center text-gray-600">
             <p className="mb-2">© 2024 CBRE Business Card Editor</p>
             <p className="text-sm">
-              Built with CBRE Web Elements • Files expire after 24 hours
+              Professional business card generator • Files expire after 24 hours
             </p>
           </div>
         </div>

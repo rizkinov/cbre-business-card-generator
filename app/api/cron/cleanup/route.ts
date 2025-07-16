@@ -9,7 +9,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    console.log('Running scheduled cleanup...');
+    // Log scheduled cleanup start for monitoring
+    console.info('Running scheduled cleanup...');
     
     // Get statistics before cleanup
     const statsBefore = getFileStatistics();
@@ -28,7 +29,8 @@ export async function GET(request: NextRequest) {
       remainingSize: statsAfter.totalSize
     };
     
-    console.log('Cleanup completed:', cleanupResult);
+    // Log cleanup completion for monitoring
+    console.info('Cleanup completed:', cleanupResult);
     
     return NextResponse.json({
       success: true,
