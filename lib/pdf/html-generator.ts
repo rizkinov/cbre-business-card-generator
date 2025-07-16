@@ -42,6 +42,10 @@ export class HTMLPDFGenerator {
     const frontHTML = this.generateFrontHTML(data, width, height);
     const backHTML = this.generateBackHTML(data, width, height);
 
+    // Use absolute URLs for production, relative for development
+    const isProduction = process.env.NODE_ENV === 'production';
+    const fontBaseUrl = isProduction ? 'https://cbre-business-card.vercel.app' : '';
+
     return `
       <!DOCTYPE html>
       <html>
@@ -54,38 +58,38 @@ export class HTMLPDFGenerator {
             /* Custom font loading with better fallbacks */
             @font-face {
               font-family: 'Financier Display';
-              src: url('/fonts/financier_display/financier-display-web-regular.woff2') format('woff2'),
-                   url('/fonts/financier_display/financier-display-web-regular.woff') format('woff');
+              src: url('${fontBaseUrl}/fonts/financier_display/financier-display-web-regular.woff2') format('woff2'),
+                   url('${fontBaseUrl}/fonts/financier_display/financier-display-web-regular.woff') format('woff');
               font-weight: 400;
               font-style: normal;
-              font-display: swap;
+              font-display: block;
             }
             
             @font-face {
               font-family: 'Financier Display';
-              src: url('/fonts/financier_display/financier-display-web-medium.woff2') format('woff2'),
-                   url('/fonts/financier_display/financier-display-web-medium.woff') format('woff');
+              src: url('${fontBaseUrl}/fonts/financier_display/financier-display-web-medium.woff2') format('woff2'),
+                   url('${fontBaseUrl}/fonts/financier_display/financier-display-web-medium.woff') format('woff');
               font-weight: 500;
               font-style: normal;
-              font-display: swap;
+              font-display: block;
             }
             
             @font-face {
               font-family: 'Calibre';
-              src: url('/fonts/calibre/calibre-web-light.woff2') format('woff2'),
-                   url('/fonts/calibre/calibre-web-light.woff') format('woff');
+              src: url('${fontBaseUrl}/fonts/calibre/calibre-web-light.woff2') format('woff2'),
+                   url('${fontBaseUrl}/fonts/calibre/calibre-web-light.woff') format('woff');
               font-weight: 300;
               font-style: normal;
-              font-display: swap;
+              font-display: block;
             }
             
             @font-face {
               font-family: 'Calibre';
-              src: url('/fonts/calibre/calibre-web-regular.woff2') format('woff2'),
-                   url('/fonts/calibre/calibre-web-regular.woff') format('woff');
+              src: url('${fontBaseUrl}/fonts/calibre/calibre-web-regular.woff2') format('woff2'),
+                   url('${fontBaseUrl}/fonts/calibre/calibre-web-regular.woff') format('woff');
               font-weight: 400;
               font-style: normal;
-              font-display: swap;
+              font-display: block;
             }
             
             @page {
@@ -381,8 +385,31 @@ export class HTMLPDFGenerator {
       
       await page.setContent(html, { waitUntil: 'networkidle0' });
       
-      // Wait for fonts to load
+      // Wait for fonts to load with longer timeout
       await page.evaluateHandle('document.fonts.ready');
+      
+      // Additional wait to ensure fonts are fully loaded
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      // Force font check
+      await page.evaluate(() => {
+        return new Promise((resolve) => {
+          if (document.fonts.ready) {
+            document.fonts.ready.then(() => {
+              // Check if custom fonts are actually loaded
+              const fontFaces = Array.from(document.fonts);
+              const customFonts = fontFaces.filter(font => 
+                font.family.includes('Financier Display') || 
+                font.family.includes('Calibre')
+              );
+              console.log('Custom fonts loaded:', customFonts.length);
+              setTimeout(resolve, 500);
+            });
+          } else {
+            setTimeout(resolve, 1000);
+          }
+        });
+      });
       
       const { width, height } = this.options.includeBleed 
         ? { width: CARD_DIMENSIONS.bleedWidth, height: CARD_DIMENSIONS.bleedHeight }
