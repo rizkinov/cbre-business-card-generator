@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { PDFGenerator } from '../../../lib/pdf/generator';
+import { HTMLPDFGenerator } from '../../../lib/pdf/html-generator';
 import { BusinessCardData } from '../../../types/business-card';
 import { validateCSVData } from '../../../utils/validation';
 import { uploadFileWithMetadata } from '../../../lib/storage/file-manager';
@@ -43,17 +43,13 @@ export async function POST(request: NextRequest) {
     // Generate PDFs for each entry
     const generationPromises = businessCardDataArray.map(async (businessCardData, index) => {
       try {
-        // Create PDF generator with PDFKit (more compatible with serverless)
-        const generator = new PDFGenerator({
-          includeBleed,
-          design: 'design1'
+        // Create PDF generator with proper Vercel configuration
+        const generator = new HTMLPDFGenerator({
+          includeBleed
         });
 
         // Generate PDF
-        const pdfBuffer = await generator
-          .generateFront(businessCardData)
-          .generateBack(businessCardData)
-          .getBuffer();
+        const pdfBuffer = await generator.generatePDF(businessCardData);
         
         // Create filename
         const filename = `${businessCardData.fullName.replace(/[^a-zA-Z0-9]/g, '_')}_BusinessCard.pdf`;

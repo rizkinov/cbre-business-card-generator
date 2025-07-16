@@ -1,5 +1,6 @@
 import puppeteer from 'puppeteer';
 import { BusinessCardData } from '../../types/business-card';
+import chromium from '@sparticuz/chromium';
 
 // CMYK to RGB conversion (same as before)
 export const CBRE_COLORS = {
@@ -353,9 +354,17 @@ export class HTMLPDFGenerator {
   }
 
   async generatePDF(data: BusinessCardData): Promise<Buffer> {
-    const browser = await puppeteer.launch({ 
-      headless: true,
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    const isProduction = process.env.NODE_ENV === 'production';
+    
+    const browser = await puppeteer.launch({
+      args: isProduction ? chromium.args : [
+        '--no-sandbox',
+        '--disable-setuid-sandbox',
+        '--disable-dev-shm-usage',
+        '--disable-gpu'
+      ],
+      executablePath: isProduction ? await chromium.executablePath() : undefined,
+      headless: true
     });
     
     try {

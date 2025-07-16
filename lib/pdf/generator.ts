@@ -63,7 +63,9 @@ export class PDFGenerator {
         CreationDate: new Date()
       },
       // Disable font embedding to avoid font loading issues
-      pdfVersion: '1.4'
+      pdfVersion: '1.4',
+      // Use built-in fonts only
+      font: 'Helvetica'
     });
 
     // Set up for high-quality print output
