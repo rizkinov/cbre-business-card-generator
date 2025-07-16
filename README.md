@@ -1,289 +1,172 @@
-# CBRE Web Elements
+# CBRE Business Card Editor
 
-A modern React component library styled according to CBRE's design system. Built on top of shadcn/ui and Tailwind CSS, this library provides a consistent, accessible, and customizable UI toolkit for CBRE web applications.
+A professional web-based business card editor that generates print-ready CMYK PDFs for CBRE employees. Built with React, Next.js, and the CBRE Web Elements design system.
 
-**Built with Next.js 15 and React 19.**
+## 🎯 Features
 
-## Features
+- **Single Card Generation**: Create individual business cards via form input
+- **Batch Processing**: Upload CSV files to generate up to 20 cards at once
+- **Print-Ready Output**: Vector PDFs at 300 DPI with CMYK color space
+- **Professional Design**: CBRE-branded template with double-sided printing
+- **Automatic Cleanup**: Files expire after 24 hours for security
+- **Responsive Interface**: Works on desktop and mobile devices
 
-- **CBRE Design System**: Components adhering to CBRE's brand guidelines
-- **Consistent Interface**: Standardized components with consistent styling and behavior
-- **TypeScript Support**: Fully typed components for improved developer experience
-- **Modular Architecture**: Import only the components you need
-- **Accessibility**: Built with accessibility in mind
-- **Framework Agnostic**: Works with any React-based framework (Next.js, Remix, Create React App)
+## 🚀 Quick Start
 
-## Table of Contents
+### Prerequisites
 
-- [Installation](#installation)
-- [Usage](#usage)
-- [Components](#components)
-- [Project Structure](#project-structure)
-- [Theming](#theming)
-- [Contributing](#contributing)
-- [Development](#development)
+- Node.js 18+ 
+- npm or yarn package manager
+- Supabase account for file storage
 
-## Installation
+### Installation
 
-### Using npm
-
-```bash
-npm install cbre-web-elements
-```
-
-### Using yarn
-
-```bash
-yarn add cbre-web-elements
-```
-
-### Using pnpm
-
-```bash
-pnpm add cbre-web-elements
-```
-
-### Installing from GitHub
-
-```bash
-npm install git+https://github.com/rizkinov/cbre-web-elements.git
-```
-
-### Required Peer Dependencies
-
-Ensure you have the necessary peer dependencies installed:
-
-```bash
-npm install react@^19 react-dom@^19 next@^15 tailwindcss@^4
-```
-
-**Note:** Due to current dependency compatibility with React 19, you might need to use the `--legacy-peer-deps` flag when installing dependencies in your project if you encounter peer dependency conflicts (e.g., `npm install --legacy-peer-deps`).
-
-## Usage
-
-### Basic Import and Usage
-
-```jsx
-import { CBRE } from 'cbre-web-elements';
-
-function App() {
-  return (
-    <div>
-      <h1>My CBRE Application</h1>
-      <CBRE.CBREButton variant="primary">Click Me</CBRE.CBREButton>
-    </div>
-  );
-}
-```
-
-### Tailwind CSS Configuration
-
-Add the CBRE theme to your Tailwind configuration. Note that this example uses ES Module syntax, which is required since the library uses `"type": "module"`.
-
-```js
-// tailwind.config.js
-import { cbreTheme } from 'cbre-web-elements/theme';
-
-/** @type {import('tailwindcss').Config} */
-const config = {
-  content: [
-    './pages/**/*.{js,ts,jsx,tsx}',
-    './components/**/*.{js,ts,jsx,tsx}',
-    './app/**/*.{js,ts,jsx,tsx}', // Include if using Next.js App Router
-    './node_modules/cbre-web-elements/dist/**/*.js',
-  ],
-  theme: {
-    extend: {
-      colors: cbreTheme.colors,
-      fontFamily: cbreTheme.typography.fonts,
-      borderRadius: cbreTheme.borderRadius,
-    },
-  },
-  plugins: [],
-};
-
-export default config;
-```
-
-### Namespace Organization
-
-The library uses namespaces to organize components and avoid naming conflicts:
-
-```jsx
-import { UI, CBRE, Blocks } from 'cbre-web-elements';
-
-// Base shadcn components
-<UI.Button>Base Button</UI.Button>
-
-// CBRE-styled components
-<CBRE.CBREButton>CBRE Button</CBRE.CBREButton>
-
-// Block components (higher-level compositions)
-<Blocks.CBRECtaBlock title="Ready to get started?">
-  <CBRE.CBREButton>Get in touch</CBRE.CBREButton>
-</Blocks.CBRECtaBlock>
-```
-
-## Components
-
-### User Interface Components
-
-CBRE Web Elements provides a comprehensive set of UI components:
-
-#### General
-
-- `CBREButton`: Primary action component with multiple variants
-- `CBREBadge`: Status indicators and labels
-- `CBREArrowButton`: Animated buttons with arrow indicators
-- `CBRECard`: Content containers with CBRE styling
-- `CBREStyledCard`: Enhanced cards with specific styling options
-
-#### Navigation
-
-- `CBREDropdownMenu`: Expandable menu for actions
-- `CBREResizable`: Resizable layout elements
-- `CBRESidebar`: Navigational sidebar with CBRE styling
-- `CBRETabs`: Tabbed interface for content organization
-- `CBREToggle`: Toggle component for on/off states
-- `CBREToggleGroup`: Group of toggles for selection
-- `CBRETooltip`: Informational hover tooltips
-
-#### Form Components
-
-- `CBRECheckbox`: Checkbox form element
-- `CBREDatePicker`: Date selection component
-- `CBRESelect`: Dropdown select component
-
-#### Data Display
-
-- `CBRETable`: Tabular data display
-- `CBREDataTable`: Enhanced table with sorting, pagination, etc.
-- `CBREAccordion`: Expandable content sections
-- `CBREChart`: Data visualization components
-- `CBREHoverCard`: Rich hover cards for additional information
-
-#### Feedback
-
-- `CBREToast`: Notifications and alerts
-- `CBRESeparator`: Visual dividers
-
-### Block Components
-
-Higher-level composed components:
-
-- `CBRECtaBlock`: Call-to-action block with title and content
-- `CBREQuoteBlock`: Quote display block with attribution
-
-## Project Structure
-
-The repository is organized as follows:
-
-```
-cbre-web-elements/
-├── src/                  # Source code
-│   ├── components/       # Component files
-│   │   ├── ui/           # Base shadcn components
-│   │   ├── cbre/         # CBRE-specific components
-│   │   └── blocks/       # Higher-level block components
-│   ├── lib/              # Utility functions
-│   ├── hooks/            # Custom React hooks
-│   └── styles/           # Global styles and theme
-├── app/                  # Demo application (Next.js App Router)
-│   └── elements-example/ # Component examples
-├── config/               # Configuration files
-├── scripts/              # Build and utility scripts
-└── public/               # Static assets
-```
-
-## Theming
-
-### CBRE Color Palette
-
-| Color | Hex |
-|-------|-----|
-| CBRE Green | `#003F2D` |
-| Accent Green | `#17E88F` |
-| Dark Green | `#012A2D` |
-| Dark Grey | `#435254` |
-| Light Grey | `#CAD1D3` |
-| Lighter Grey | `#E6E8E9` |
-
-### CSS Variables
-
-CBRE Web Elements uses CSS variables for theming that you can override:
-
-```css
-:root {
-  --cbre-green: #003F2D;
-  --accent-green: #17E88F;
-  --dark-green: #012A2D;
-  --dark-grey: #435254;
-  --light-grey: #CAD1D3;
-  --lighter-grey: #E6E8E9;
-}
-```
-
-### Customizing Components
-
-You can customize components using Tailwind classes:
-
-```jsx
-<CBRE.CBREButton 
-  className="bg-blue-500 hover:bg-blue-600 text-white"
->
-  Custom Button
-</CBRE.CBREButton>
-```
-
-## Contributing
-
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on how to get started.
-
-### Code of Conduct
-
-This project adheres to a [Code of Conduct](CONDUCT.md). By participating, you are expected to uphold this code.
-
-## Development
-
-This project uses ES Modules (`"type": "module"`). Ensure your configuration files (like `next.config.js`, `tailwind.config.js`) use ES Module syntax (`import`/`export default`).
-
-### Setup
-
-1. Clone the repository:
+1. **Clone the repository**
    ```bash
-   git clone https://github.com/rizkinov/cbre-web-elements.git
-   cd cbre-web-elements
+   git clone https://github.com/rizkinov/cbre-business-card-editor.git
+   cd cbre-business-card-editor
    ```
 
-2. Install dependencies:
+2. **Install dependencies**
    ```bash
-   npm install --legacy-peer-deps
+   npm install
    ```
-   *(The `--legacy-peer-deps` flag is currently needed due to `react-day-picker`'s peer dependency requirements with React 19.)*
 
-3. Start the development server:
+3. **Set up environment variables**
+   ```bash
+   cp .env.example .env.local
+   ```
+   
+   Configure your `.env.local` file:
+   ```env
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+   SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+   ```
+
+4. **Run the development server**
    ```bash
    npm run dev
    ```
 
-### Building the Library
+5. **Open your browser**
+   Navigate to `http://localhost:3000`
 
-```bash
-npm run build:lib
+## 📋 Usage
+
+### Single Card Generation
+
+1. Select "Single Card" tab
+2. Fill out the form with your information:
+   - Full Name (required)
+   - Title (required)
+   - License Number (optional)
+   - Office Name (required)
+   - Office Address (required)
+   - Email (required)
+   - Telephone (required)
+   - Mobile (required)
+3. Toggle 3mm bleed if required
+4. Click "Generate PDF"
+5. Download your business card
+
+### Batch Processing
+
+1. Select "Batch CSV" tab
+2. Download the CSV template
+3. Fill the template with up to 20 entries
+4. Upload your CSV file
+5. Toggle 3mm bleed if required
+6. Generate and download ZIP file containing all cards
+
+### CSV Template Format
+
+```csv
+Full Name,Title,License Number,Office Name,Office Address,Email,Telephone,Mobile
+John Doe,Director GWS APAC,,CBRE GWS APAC,"18.01, Level 18, 1Powerhouse Persiaran Bandar Utama, Bandar Utama, Petaling Jaya, Selangor 47800, Malaysia",john.doe@cbre.com,03-12345678,012-3456789
+Jane Smith,Sales Assistant,1234AB,CBRE Singapore,"2 Tanjong Katong Rd, #06-01 Paya Lebar Quarter, Singapore 437161",jane.smith@cbre.com,06-98765432,019-8887777
 ```
 
-### Creating a New Component
+## 🎨 Design Specifications
 
-```bash
-npm run generateComp
+### Card Dimensions
+- **Final Size**: 89mm × 50mm
+- **With Bleed**: 95mm × 56mm (3mm bleed on all sides)
+- **Resolution**: 300 DPI
+- **Color Space**: CMYK
+
+### Color Palette
+- **CBRE Green**: CMYK(90, 46, 80, 55)
+- **Dark Green**: CMYK(91, 62, 62, 65)
+- **Dark Grey**: CMYK(73, 55, 55, 33)
+- **White**: CMYK(0, 0, 0, 0)
+
+### Typography
+- **Financier Display**: Names and titles
+- **Calibre**: All other text elements
+
+## 🔧 Technical Stack
+
+- **Frontend**: React 19 + Next.js 15
+- **Styling**: Tailwind CSS 4.0 + CBRE Web Elements
+- **PDF Generation**: PDFKit
+- **File Storage**: Supabase Storage
+- **Form Handling**: React Hook Form + Zod
+- **CSV Processing**: PapaParse
+- **Deployment**: Vercel
+
+## 📁 Project Structure
+
+```
+cbre-business-card-editor/
+├── app/                    # Next.js app directory
+│   ├── page.tsx           # Main application page
+│   └── api/               # API routes
+├── src/
+│   ├── components/        # React components
+│   │   ├── ui/           # Base UI components
+│   │   ├── cbre/         # CBRE-branded components
+│   │   └── business-card/ # Business card specific components
+│   └── lib/              # Utility libraries
+├── public/               # Static assets
+├── config/               # Configuration files
+└── types/                # TypeScript type definitions
 ```
 
-### Running Tests
+## 🔐 Security Features
 
-```bash
-npm test
+- **File Expiration**: All generated files automatically expire after 24 hours
+- **Input Validation**: Comprehensive form and CSV validation
+- **Rate Limiting**: Prevents abuse of PDF generation endpoints
+- **Secure Storage**: Files stored in Supabase with proper access controls
+
+## 🚀 Deployment
+
+### Deploy to Vercel
+
+1. **Connect your repository to Vercel**
+2. **Set environment variables in Vercel dashboard**
+3. **Deploy**
+
+### Environment Variables
+
+```env
+NEXT_PUBLIC_SUPABASE_URL=your_supabase_url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
 ```
 
-## License
+## 📊 API Endpoints
 
-MIT © CBRE
+- `POST /api/generate-pdf` - Generate single business card
+- `POST /api/generate-batch` - Process CSV and generate batch
+- `GET /api/download/[id]` - Download generated files
+- `GET /api/template/csv` - Download CSV template
+
+## 🛠️ Development
+
+### Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `

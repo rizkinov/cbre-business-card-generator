@@ -1,0 +1,389 @@
+import puppeteer from 'puppeteer';
+import { BusinessCardData } from '../../types/business-card';
+
+// CMYK to RGB conversion (same as before)
+export const CBRE_COLORS = {
+  green: '#1E5A41',
+  darkGreen: '#1A3D32',
+  darkGrey: '#4A4A4A',
+  white: '#FFFFFF',
+  black: '#000000'
+};
+
+// Business card dimensions in mm
+export const CARD_DIMENSIONS = {
+  width: 89, // mm
+  height: 50, // mm
+  bleedWidth: 95, // mm
+  bleedHeight: 56, // mm
+  bleed: 3 // mm
+};
+
+export interface HTMLPDFGeneratorOptions {
+  includeBleed?: boolean;
+}
+
+export class HTMLPDFGenerator {
+  private options: HTMLPDFGeneratorOptions;
+
+  constructor(options: HTMLPDFGeneratorOptions = { includeBleed: false }) {
+    this.options = {
+      includeBleed: false,
+      ...options
+    };
+  }
+
+  private generateHTML(data: BusinessCardData): string {
+    const { width, height } = this.options.includeBleed 
+      ? { width: CARD_DIMENSIONS.bleedWidth, height: CARD_DIMENSIONS.bleedHeight }
+      : { width: CARD_DIMENSIONS.width, height: CARD_DIMENSIONS.height };
+
+    const frontHTML = this.generateFrontHTML(data, width, height);
+    const backHTML = this.generateBackHTML(data, width, height);
+
+    return `
+      <!DOCTYPE html>
+      <html>
+        <head>
+          <meta charset="UTF-8">
+          <style>
+            @font-face {
+              font-family: 'Financier Display';
+              src: url('/fonts/financier_display/financier-display-web-regular.woff2') format('woff2'),
+                   url('/fonts/financier_display/financier-display-web-regular.woff') format('woff');
+              font-weight: 400;
+              font-style: normal;
+            }
+            
+            @font-face {
+              font-family: 'Financier Display';
+              src: url('/fonts/financier_display/financier-display-web-medium.woff2') format('woff2'),
+                   url('/fonts/financier_display/financier-display-web-medium.woff') format('woff');
+              font-weight: 500;
+              font-style: normal;
+            }
+            
+            @font-face {
+              font-family: 'Calibre';
+              src: url('/fonts/calibre/calibre-web-light.woff2') format('woff2'),
+                   url('/fonts/calibre/calibre-web-light.woff') format('woff');
+              font-weight: 300;
+              font-style: normal;
+            }
+            
+            @font-face {
+              font-family: 'Calibre';
+              src: url('/fonts/calibre/calibre-web-regular.woff2') format('woff2'),
+                   url('/fonts/calibre/calibre-web-regular.woff') format('woff');
+              font-weight: 400;
+              font-style: normal;
+            }
+            
+            @page {
+              size: ${width}mm ${height}mm;
+              margin: 0;
+            }
+            
+            * {
+              margin: 0;
+              padding: 0;
+              box-sizing: border-box;
+            }
+            
+            html, body {
+              margin: 0;
+              padding: 0;
+              width: ${width}mm;
+              height: ${height * 2}mm;
+              font-family: 'Calibre', Arial, sans-serif;
+              font-weight: 300;
+              background-color: #f8f8f8;
+              overflow: hidden;
+            }
+            
+            .card-table {
+              width: 100%;
+              height: ${height}mm;
+              border-collapse: collapse;
+              table-layout: fixed;
+              position: relative;
+            }
+            
+            .green-stripe {
+              width: 3mm;
+              background-color: #f8f8f8;
+              padding: 0;
+              vertical-align: top;
+              position: relative;
+            }
+            
+            .green-bar {
+              position: absolute;
+              top: 8mm;
+              bottom: 8mm;
+              left: 0;
+              right: 0;
+              background-color: #003F2D;
+            }
+            
+            .main-content {
+              background-color: #f8f8f8;
+              vertical-align: top;
+              padding: 8mm 0 0 3mm;
+              position: relative;
+              width: 51mm;
+            }
+            
+            .logo-contact {
+              width: 35mm;
+              background-color: #f8f8f8;
+              vertical-align: top;
+              padding: 8mm 5mm 4mm 4mm;
+              position: relative;
+            }
+            
+            .name {
+              font-family: 'Financier Display', Tahoma, sans-serif;
+              font-size: 16pt;
+              font-weight: 400;
+              color: #012A2D;
+              margin-bottom: 1mm;
+              line-height: 1.2;
+            }
+            
+            .title-license {
+              font-family: 'Calibre', Arial, sans-serif;
+              font-weight: 300;
+              font-size: 7pt;
+              color: #435254;
+              margin-bottom: 6mm;
+              line-height: 1.2;
+            }
+            
+            .company-info {
+              font-family: 'Calibre', Arial, sans-serif;
+              font-weight: 300;
+              font-size: 7pt;
+              color: #435254;
+              line-height: 1.2;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+            }
+            
+            .company-name {
+              font-weight: 400;
+              margin-bottom: 1mm;
+            }
+            
+            .address {
+              max-width: 45mm;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+              hyphens: auto;
+            }
+            
+            .website {
+              font-family: 'Calibre', Arial, sans-serif;
+              font-weight: 300;
+              font-size: 7pt;
+              color: #435254;
+              position: absolute;
+              bottom: 8mm;
+              left: 3mm;
+            }
+            
+            .logo {
+              position: absolute;
+              top: 8mm;
+              right: 5mm;
+              margin-bottom: 6mm;
+            }
+            
+            .logo svg {
+              width: auto;
+              height: 6mm;
+              fill: #003F2D;
+            }
+            
+            .contact-info {
+              text-align: right;
+              font-family: 'Calibre', Arial, sans-serif;
+              font-weight: 300;
+              font-size: 7pt;
+              color: #435254;
+              line-height: 1.1;
+              white-space: nowrap;
+              position: absolute;
+              bottom: 8mm;
+              right: 5mm;
+            }
+            
+            .contact-info div {
+              margin-bottom: 0.8mm;
+            }
+            
+            .contact-info div:last-child {
+              margin-bottom: 0;
+            }
+            
+            .recycle-icon {
+              width: 8mm;
+              height: 8mm;
+              fill: rgba(255, 255, 255, 0.3);
+              position: absolute;
+              bottom: 5mm;
+              right: 5mm;
+            }
+            
+            .green-block {
+              background-color: ${CBRE_COLORS.green};
+              position: absolute;
+            }
+            
+            .text-white {
+              color: ${CBRE_COLORS.white};
+            }
+            
+            .text-center {
+              text-align: center;
+            }
+          </style>
+        </head>
+        <body>
+          <div style="width: ${width}mm; height: ${height}mm; margin: 0; padding: 0; position: relative; page-break-after: always;">
+            ${frontHTML}
+          </div>
+          <div style="width: ${width}mm; height: ${height}mm; margin: 0; padding: 0; position: relative; overflow: visible;">
+            ${backHTML}
+          </div>
+        </body>
+      </html>
+    `;
+  }
+
+  private generateFrontHTML(data: BusinessCardData, width: number, height: number): string {
+    return `
+      <table class="card-table">
+        <tr>
+          <td class="green-stripe">
+            <div class="green-bar"></div>
+          </td>
+          <td class="main-content">
+            <div class="name">${data.fullName}</div>
+            <div class="title-license">
+              <div>${data.title}</div>
+              ${data.licenseNumber ? `<div>Lic no. ${data.licenseNumber}</div>` : ''}
+            </div>
+            <div class="company-info">
+              <div class="company-name">${data.officeName}</div>
+              <div class="address">${data.officeAddress}</div>
+            </div>
+            <div class="website">cbre.com</div>
+          </td>
+          <td class="logo-contact">
+            <div class="logo">
+              <svg viewBox="0 0 81 20.13" xmlns="http://www.w3.org/2000/svg">
+                <path d="M33.57,15.41H26.89V12.05h6.86a1.66,1.66,0,0,1,1.49,1.64,1.73,1.73,0,0,1-1.67,1.72m-6.68-11h7A1.64,1.64,0,0,1,35.3,6a1.72,1.72,0,0,1-1.43,1.68h-7Zm9.94,5.37c2.56-.85,3-3,3-4.75,0-2.68-1.89-5-7.48-5H21.94V20.09h10.4C38,20.09,40,17.21,40,14.32a4.91,4.91,0,0,0-3.19-4.58M63.37,0V20.13H81V15.54H68.28V12H79.75V7.63H68.28V4.39H81V0ZM55.79,6.26a1.65,1.65,0,0,1-1.57,1.38H47.34V4.43h6.88a1.57,1.57,0,0,1,1.57,1.4ZM53.12,0H42.47v20.1h4.89V12h5.39a2.8,2.8,0,0,1,2.74,2.85v5.27h4.79V13.62a4.21,4.21,0,0,0-2.9-3.89,4.5,4.5,0,0,0,3-4.44C60.34.94,56.6,0,53.12,0M18.76,15.27c-.07,0-6.69.13-9-.09a5.16,5.16,0,0,1-5-5.31,5.14,5.14,0,0,1,4.82-5.2c1.39-.19,9-.1,9.09-.1h.16L18.9,0h-.16L10.11,0A12.73,12.73,0,0,0,5.93.84,10.25,10.25,0,0,0,2,4a10,10,0,0,0-2,6,12.15,12.15,0,0,0,.16,2A9.8,9.8,0,0,0,5.65,19a14.72,14.72,0,0,0,5.46,1.11l1.63,0h6.17V15.27Z"/>
+              </svg>
+            </div>
+            <div class="contact-info">
+              <div>${data.email}</div>
+              <div>T ${data.telephone}</div>
+              <div>M ${data.mobile}</div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    `;
+  }
+
+  private generateDesign2Front(data: BusinessCardData, width: number, height: number): string {
+    return `
+      <table class="card-table">
+        <tr>
+          <td class="green-stripe">
+            <div class="green-bar"></div>
+          </td>
+          <td class="main-content">
+            <div class="name">${data.fullName}</div>
+            <div class="title-license">
+              <div>${data.title}</div>
+              ${data.licenseNumber ? `<div>Lic no. ${data.licenseNumber}</div>` : ''}
+            </div>
+            <div class="company-info">
+              <div class="company-name">${data.officeName}</div>
+              <div class="address">${data.officeAddress}</div>
+            </div>
+            <div class="website">cbre.com</div>
+          </td>
+          <td class="logo-contact">
+            <div class="logo">
+              <svg viewBox="0 0 81 20.13" xmlns="http://www.w3.org/2000/svg">
+                <path d="M33.57,15.41H26.89V12.05h6.86a1.66,1.66,0,0,1,1.49,1.64,1.73,1.73,0,0,1-1.67,1.72m-6.68-11h7A1.64,1.64,0,0,1,35.3,6a1.72,1.72,0,0,1-1.43,1.68h-7Zm9.94,5.37c2.56-.85,3-3,3-4.75,0-2.68-1.89-5-7.48-5H21.94V20.09h10.4C38,20.09,40,17.21,40,14.32a4.91,4.91,0,0,0-3.19-4.58M63.37,0V20.13H81V15.54H68.28V12H79.75V7.63H68.28V4.39H81V0ZM55.79,6.26a1.65,1.65,0,0,1-1.57,1.38H47.34V4.43h6.88a1.57,1.57,0,0,1,1.57,1.4ZM53.12,0H42.47v20.1h4.89V12h5.39a2.8,2.8,0,0,1,2.74,2.85v5.27h4.79V13.62a4.21,4.21,0,0,0-2.9-3.89,4.5,4.5,0,0,0,3-4.44C60.34.94,56.6,0,53.12,0M18.76,15.27c-.07,0-6.69.13-9-.09a5.16,5.16,0,0,1-5-5.31,5.14,5.14,0,0,1,4.82-5.2c1.39-.19,9-.1,9.09-.1h.16L18.9,0h-.16L10.11,0A12.73,12.73,0,0,0,5.93.84,10.25,10.25,0,0,0,2,4a10,10,0,0,0-2,6,12.15,12.15,0,0,0,.16,2A9.8,9.8,0,0,0,5.65,19a14.72,14.72,0,0,0,5.46,1.11l1.63,0h6.17V15.27Z"/>
+              </svg>
+            </div>
+            <div class="contact-info">
+              <div>${data.email}</div>
+              <div>T ${data.telephone}</div>
+              <div>M ${data.mobile}</div>
+            </div>
+          </td>
+        </tr>
+      </table>
+    `;
+  }
+
+  private generateBackHTML(data: BusinessCardData, width: number, height: number): string {
+    const cardWidth = this.options.includeBleed ? CARD_DIMENSIONS.bleedWidth : CARD_DIMENSIONS.width;
+    const cardHeight = this.options.includeBleed ? CARD_DIMENSIONS.bleedHeight : CARD_DIMENSIONS.height;
+    
+    return `
+      <div style="width: ${cardWidth}mm; height: ${cardHeight}mm; background-color: #003F2D; position: relative; margin: 0; padding: 0; box-sizing: border-box;">
+        <!-- Recycle Icon -->
+        <svg style="width: 6mm; height: 6mm; fill: rgba(255, 255, 255, 0.5); position: absolute; bottom: 5mm; right: 5mm;" viewBox="0 -8 72 72" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24.42,30.55,27,32.1c.42,0,.64-.18.64-.53a2.3,2.3,0,0,0-.3-.94l-5.6-10.51-12.39.3a.78.78,0,0,0-.84.87c0,.13.18.3.53.53l2.57,1.55L8.84,27.6a6.15,6.15,0,0,0-1.13,3A4.91,4.91,0,0,0,8.46,33l8.43,14.7a12.58,12.58,0,0,1-.3-2.64A8,8,0,0,1,18,40.64l6.43-10.09Z"/>
+          <path d="M27.67,22,34.62,11.2q-3.9-8.88-8.28-8.88c-1.76,0-2.94.49-3.55,1.47L16.21,14.3,27.67,22Z"/>
+          <path d="M22,51.15H35.41V37.2H22.49a47.41,47.41,0,0,0-3,4.61,8.66,8.66,0,0,0-1,3.93q0,5.41,3.48,5.41Z"/>
+          <path d="M49.63,19.4l6-10a2.22,2.22,0,0,0,.3-1.1c0-.45-.15-.68-.45-.68a2.53,2.53,0,0,1-.61.23L52.12,9,49.63,4.09Q48,.77,43,.77H27.44a12.15,12.15,0,0,1,3.85,1.7q2.39,1.89,4.88,7.1l3.1,6.5L37,17.17a.6.6,0,0,0-.34.61c0,.37.24.59.72.64l12.29,1Z"/>
+          <path d="M55.6,49.07l8.69-15.8a9.69,9.69,0,0,1-4.19,2.95,17.27,17.27,0,0,1-5.18.61H45.24v-2q0-1.17-.57-1.17a.65.65,0,0,0-.6.3L38,44.57l6.35,9.76c.48.73.89,1,1.24.86s.53-.28.53-.56V51.3h5.37a4.33,4.33,0,0,0,4.16-2.23Z"/>
+          <path d="M51.82,34.82H57.6A6.91,6.91,0,0,0,61.91,33q2.39-1.89,2.38-4a3.47,3.47,0,0,0-.64-1.93l-6.88-10.5L44.94,23.45l6.88,11.37Z"/>
+        </svg>
+      </div>
+    `;
+  }
+
+  async generatePDF(data: BusinessCardData): Promise<Buffer> {
+    const browser = await puppeteer.launch({ 
+      headless: true,
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
+    
+    try {
+      const page = await browser.newPage();
+      const html = this.generateHTML(data);
+      
+      await page.setContent(html, { waitUntil: 'networkidle0' });
+      
+      const { width, height } = this.options.includeBleed 
+        ? { width: CARD_DIMENSIONS.bleedWidth, height: CARD_DIMENSIONS.bleedHeight }
+        : { width: CARD_DIMENSIONS.width, height: CARD_DIMENSIONS.height };
+      
+      const pdfBuffer = await page.pdf({
+        width: `${width}mm`,
+        height: `${height}mm`, // Single business card height per page
+        printBackground: true,
+        margin: {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0
+        }
+      });
+       
+       return Buffer.from(pdfBuffer);
+      
+    } finally {
+      await browser.close();
+    }
+  }
+} 
