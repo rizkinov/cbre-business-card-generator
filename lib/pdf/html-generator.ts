@@ -48,12 +48,17 @@ export class HTMLPDFGenerator {
         <head>
           <meta charset="UTF-8">
           <style>
+            /* Import Google Fonts for better consistency */
+            @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@300;400;500&display=swap');
+            
+            /* Custom font loading with better fallbacks */
             @font-face {
               font-family: 'Financier Display';
               src: url('/fonts/financier_display/financier-display-web-regular.woff2') format('woff2'),
                    url('/fonts/financier_display/financier-display-web-regular.woff') format('woff');
               font-weight: 400;
               font-style: normal;
+              font-display: swap;
             }
             
             @font-face {
@@ -62,6 +67,7 @@ export class HTMLPDFGenerator {
                    url('/fonts/financier_display/financier-display-web-medium.woff') format('woff');
               font-weight: 500;
               font-style: normal;
+              font-display: swap;
             }
             
             @font-face {
@@ -70,6 +76,7 @@ export class HTMLPDFGenerator {
                    url('/fonts/calibre/calibre-web-light.woff') format('woff');
               font-weight: 300;
               font-style: normal;
+              font-display: swap;
             }
             
             @font-face {
@@ -78,6 +85,7 @@ export class HTMLPDFGenerator {
                    url('/fonts/calibre/calibre-web-regular.woff') format('woff');
               font-weight: 400;
               font-style: normal;
+              font-display: swap;
             }
             
             @page {
@@ -96,7 +104,7 @@ export class HTMLPDFGenerator {
               padding: 0;
               width: ${width}mm;
               height: ${height * 2}mm;
-              font-family: 'Calibre', Arial, sans-serif;
+              font-family: 'Calibre', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
               font-weight: 300;
               background-color: #f8f8f8;
               overflow: hidden;
@@ -144,7 +152,7 @@ export class HTMLPDFGenerator {
             }
             
             .name {
-              font-family: 'Financier Display', Tahoma, sans-serif;
+              font-family: 'Financier Display', 'Playfair Display', Georgia, 'Times New Roman', serif;
               font-size: 16pt;
               font-weight: 400;
               color: #012A2D;
@@ -153,7 +161,7 @@ export class HTMLPDFGenerator {
             }
             
             .title-license {
-              font-family: 'Calibre', Arial, sans-serif;
+              font-family: 'Calibre', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
               font-weight: 300;
               font-size: 7pt;
               color: #435254;
@@ -162,7 +170,7 @@ export class HTMLPDFGenerator {
             }
             
             .company-info {
-              font-family: 'Calibre', Arial, sans-serif;
+              font-family: 'Calibre', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
               font-weight: 300;
               font-size: 7pt;
               color: #435254;
@@ -184,7 +192,7 @@ export class HTMLPDFGenerator {
             }
             
             .website {
-              font-family: 'Calibre', Arial, sans-serif;
+              font-family: 'Calibre', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
               font-weight: 300;
               font-size: 7pt;
               color: #435254;
@@ -208,7 +216,7 @@ export class HTMLPDFGenerator {
             
             .contact-info {
               text-align: right;
-              font-family: 'Calibre', Arial, sans-serif;
+              font-family: 'Calibre', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
               font-weight: 300;
               font-size: 7pt;
               color: #435254;
@@ -372,6 +380,9 @@ export class HTMLPDFGenerator {
       const html = this.generateHTML(data);
       
       await page.setContent(html, { waitUntil: 'networkidle0' });
+      
+      // Wait for fonts to load
+      await page.evaluateHandle('document.fonts.ready');
       
       const { width, height } = this.options.includeBleed 
         ? { width: CARD_DIMENSIONS.bleedWidth, height: CARD_DIMENSIONS.bleedHeight }
