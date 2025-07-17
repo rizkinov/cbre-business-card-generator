@@ -149,7 +149,7 @@ export class HTMLPDFGenerator {
             .main-content {
               background-color: #f8f8f8;
               vertical-align: top;
-              padding: ${8 + bleedOffset}mm 0 0 ${3 + bleedOffset}mm;
+              padding: ${8 + bleedOffset}mm 0 0 ${3}mm;
               position: relative;
               width: 51mm;
             }
@@ -158,7 +158,7 @@ export class HTMLPDFGenerator {
               width: 35mm;
               background-color: #f8f8f8;
               vertical-align: top;
-              padding: ${8 + bleedOffset}mm ${5 + bleedOffset}mm ${4 + bleedOffset}mm ${2 + bleedOffset}mm;
+              padding: ${8 + bleedOffset}mm ${5 + bleedOffset}mm ${4 + bleedOffset}mm ${2}mm;
               position: relative;
             }
             
@@ -209,7 +209,7 @@ export class HTMLPDFGenerator {
               color: #435254;
               position: absolute;
               bottom: ${8 + bleedOffset}mm;
-              left: ${3 + bleedOffset}mm;
+              left: ${3}mm;
             }
             
             .logo {
