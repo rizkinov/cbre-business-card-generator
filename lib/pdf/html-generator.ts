@@ -276,13 +276,13 @@ export class HTMLPDFGenerator {
             /* Front crop marks (dark grey on white background) */
             .crop-mark-front {
               position: absolute;
-              border: 0.1pt solid rgba(0, 0, 0, 0.4);
+              border: none;
             }
             
             /* Back crop marks (light grey on green background) */
             .crop-mark-back {
               position: absolute;
-              border: 0.1pt solid rgba(255, 255, 255, 0.3);
+              border: none;
             }
             
             /* Top-left corner - horizontal line extends LEFT, vertical line extends UP */
