@@ -273,109 +273,219 @@ export class HTMLPDFGenerator {
               display: ${this.options.includeBleed ? 'block' : 'none'};
             }
             
-            .crop-mark {
+            /* Front crop marks (dark grey on white background) */
+            .crop-mark-front {
               position: absolute;
-              border: 0.25pt solid rgba(0, 0, 0, 0.4);
+              border: 0.1pt solid rgba(0, 0, 0, 0.4);
             }
             
-            .crop-mark-top-left {
-              top: 1mm;
-              left: 1mm;
-              width: 2mm;
+            /* Back crop marks (light grey on green background) */
+            .crop-mark-back {
+              position: absolute;
+              border: 0.1pt solid rgba(255, 255, 255, 0.3);
+            }
+            
+            /* Top-left corner - extends UP and LEFT toward corner */
+            .crop-mark-front.crop-mark-top-left {
+              top: 3mm;
+              left: 3mm;
+              width: 3mm;
               height: 0;
-              border-top: 0.25pt solid rgba(0, 0, 0, 0.4);
+              border-top: 0.1pt solid rgba(0, 0, 0, 0.4);
               border-right: none;
               border-bottom: none;
               border-left: none;
             }
             
-            .crop-mark-top-left::after {
-              content: '';
-              position: absolute;
-              top: -0.125pt;
-              left: -0.125pt;
-              width: 0;
-              height: 2mm;
-              border-left: 0.25pt solid rgba(0, 0, 0, 0.4);
-            }
-            
-            .crop-mark-top-right {
-              top: 1mm;
-              right: 1mm;
-              width: 2mm;
+            .crop-mark-back.crop-mark-top-left {
+              top: 3mm;
+              left: 3mm;
+              width: 3mm;
               height: 0;
-              border-top: 0.25pt solid rgba(0, 0, 0, 0.4);
+              border-top: 0.1pt solid rgba(255, 255, 255, 0.3);
               border-right: none;
               border-bottom: none;
               border-left: none;
             }
             
-            .crop-mark-top-right::after {
+            .crop-mark-front.crop-mark-top-left::after {
               content: '';
               position: absolute;
-              top: -0.125pt;
-              right: -0.125pt;
+              top: -0.05pt;
+              left: -0.05pt;
               width: 0;
-              height: 2mm;
-              border-right: 0.25pt solid rgba(0, 0, 0, 0.4);
+              height: 3mm;
+              border-left: 0.1pt solid rgba(0, 0, 0, 0.4);
             }
             
-            .crop-mark-bottom-left {
-              bottom: 1mm;
-              left: 1mm;
-              width: 2mm;
+            .crop-mark-back.crop-mark-top-left::after {
+              content: '';
+              position: absolute;
+              top: -0.05pt;
+              left: -0.05pt;
+              width: 0;
+              height: 3mm;
+              border-left: 0.1pt solid rgba(255, 255, 255, 0.3);
+            }
+            
+            /* Top-right corner - extends UP and RIGHT toward corner */
+            .crop-mark-front.crop-mark-top-right {
+              top: 3mm;
+              right: 3mm;
+              width: 3mm;
               height: 0;
-              border-bottom: 0.25pt solid rgba(0, 0, 0, 0.4);
+              border-top: 0.1pt solid rgba(0, 0, 0, 0.4);
+              border-right: none;
+              border-bottom: none;
+              border-left: none;
+              transform: translateX(3mm);
+            }
+            
+            .crop-mark-back.crop-mark-top-right {
+              top: 3mm;
+              right: 3mm;
+              width: 3mm;
+              height: 0;
+              border-top: 0.1pt solid rgba(255, 255, 255, 0.3);
+              border-right: none;
+              border-bottom: none;
+              border-left: none;
+              transform: translateX(3mm);
+            }
+            
+            .crop-mark-front.crop-mark-top-right::after {
+              content: '';
+              position: absolute;
+              top: -0.05pt;
+              right: -0.05pt;
+              width: 0;
+              height: 3mm;
+              border-right: 0.1pt solid rgba(0, 0, 0, 0.4);
+            }
+            
+            .crop-mark-back.crop-mark-top-right::after {
+              content: '';
+              position: absolute;
+              top: -0.05pt;
+              right: -0.05pt;
+              width: 0;
+              height: 3mm;
+              border-right: 0.1pt solid rgba(255, 255, 255, 0.3);
+            }
+            
+            /* Bottom-left corner - extends DOWN and LEFT toward corner */
+            .crop-mark-front.crop-mark-bottom-left {
+              bottom: 3mm;
+              left: 3mm;
+              width: 3mm;
+              height: 0;
+              border-bottom: 0.1pt solid rgba(0, 0, 0, 0.4);
               border-right: none;
               border-top: none;
               border-left: none;
             }
             
-            .crop-mark-bottom-left::after {
-              content: '';
-              position: absolute;
-              bottom: -0.125pt;
-              left: -0.125pt;
-              width: 0;
-              height: 2mm;
-              border-left: 0.25pt solid rgba(0, 0, 0, 0.4);
-            }
-            
-            .crop-mark-bottom-right {
-              bottom: 1mm;
-              right: 1mm;
-              width: 2mm;
+            .crop-mark-back.crop-mark-bottom-left {
+              bottom: 3mm;
+              left: 3mm;
+              width: 3mm;
               height: 0;
-              border-bottom: 0.25pt solid rgba(0, 0, 0, 0.4);
+              border-bottom: 0.1pt solid rgba(255, 255, 255, 0.3);
               border-right: none;
               border-top: none;
               border-left: none;
             }
             
-            .crop-mark-bottom-right::after {
+            .crop-mark-front.crop-mark-bottom-left::after {
               content: '';
               position: absolute;
-              bottom: -0.125pt;
-              right: -0.125pt;
+              bottom: -0.05pt;
+              left: -0.05pt;
               width: 0;
-              height: 2mm;
-              border-right: 0.25pt solid rgba(0, 0, 0, 0.4);
+              height: 3mm;
+              border-left: 0.1pt solid rgba(0, 0, 0, 0.4);
+              transform: translateY(-3mm);
+            }
+            
+            .crop-mark-back.crop-mark-bottom-left::after {
+              content: '';
+              position: absolute;
+              bottom: -0.05pt;
+              left: -0.05pt;
+              width: 0;
+              height: 3mm;
+              border-left: 0.1pt solid rgba(255, 255, 255, 0.3);
+              transform: translateY(-3mm);
+            }
+            
+            /* Bottom-right corner - extends DOWN and RIGHT toward corner */
+            .crop-mark-front.crop-mark-bottom-right {
+              bottom: 3mm;
+              right: 3mm;
+              width: 3mm;
+              height: 0;
+              border-bottom: 0.1pt solid rgba(0, 0, 0, 0.4);
+              border-right: none;
+              border-top: none;
+              border-left: none;
+              transform: translateX(3mm);
+            }
+            
+            .crop-mark-back.crop-mark-bottom-right {
+              bottom: 3mm;
+              right: 3mm;
+              width: 3mm;
+              height: 0;
+              border-bottom: 0.1pt solid rgba(255, 255, 255, 0.3);
+              border-right: none;
+              border-top: none;
+              border-left: none;
+              transform: translateX(3mm);
+            }
+            
+            .crop-mark-front.crop-mark-bottom-right::after {
+              content: '';
+              position: absolute;
+              bottom: -0.05pt;
+              right: -0.05pt;
+              width: 0;
+              height: 3mm;
+              border-right: 0.1pt solid rgba(0, 0, 0, 0.4);
+              transform: translateY(-3mm);
+            }
+            
+            .crop-mark-back.crop-mark-bottom-right::after {
+              content: '';
+              position: absolute;
+              bottom: -0.05pt;
+              right: -0.05pt;
+              width: 0;
+              height: 3mm;
+              border-right: 0.1pt solid rgba(255, 255, 255, 0.3);
+              transform: translateY(-3mm);
             }
           </style>
         </head>
         <body>
           <div style="width: ${width}mm; height: ${height}mm; margin: 0; padding: 0; position: relative; page-break-after: always;">
             ${frontHTML}
-            <!-- Crop marks for professional printing -->
+            <!-- Crop marks for professional printing (front side) -->
             <div class="crop-marks">
-              <div class="crop-mark crop-mark-top-left"></div>
-              <div class="crop-mark crop-mark-top-right"></div>
-              <div class="crop-mark crop-mark-bottom-left"></div>
-              <div class="crop-mark crop-mark-bottom-right"></div>
+              <div class="crop-mark-front crop-mark-top-left"></div>
+              <div class="crop-mark-front crop-mark-top-right"></div>
+              <div class="crop-mark-front crop-mark-bottom-left"></div>
+              <div class="crop-mark-front crop-mark-bottom-right"></div>
             </div>
           </div>
           <div style="width: ${width}mm; height: ${height}mm; margin: 0; padding: 0; position: relative; overflow: visible;">
             ${backHTML}
+            <!-- Crop marks for professional printing (back side) -->
+            <div class="crop-marks">
+              <div class="crop-mark-back crop-mark-top-left"></div>
+              <div class="crop-mark-back crop-mark-top-right"></div>
+              <div class="crop-mark-back crop-mark-bottom-left"></div>
+              <div class="crop-mark-back crop-mark-bottom-right"></div>
+            </div>
           </div>
         </body>
       </html>
