@@ -188,6 +188,7 @@ export class HTMLPDFGenerator {
               line-height: 1.2;
               word-wrap: break-word;
               overflow-wrap: break-word;
+              margin-top: -2mm;
             }
             
             .company-name {
