@@ -291,7 +291,7 @@ export class HTMLPDFGenerator {
               left: 0mm;
               width: 3mm;
               height: 0;
-              border-top: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
+              border-top: 0.5px solid rgba(0, 0, 0, 0.4) !important;
               border-right: none;
               border-bottom: none;
               border-left: none;
@@ -302,7 +302,7 @@ export class HTMLPDFGenerator {
               left: 0mm;
               width: 3mm;
               height: 0;
-              border-top: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
+              border-top: 0.5px solid rgba(255, 255, 255, 0.3) !important;
               border-right: none;
               border-bottom: none;
               border-left: none;
@@ -315,7 +315,7 @@ export class HTMLPDFGenerator {
               left: 3mm;
               width: 0;
               height: 3mm;
-              border-left: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
+              border-left: 0.5px solid rgba(0, 0, 0, 0.4) !important;
             }
             
             .crop-mark-back.crop-mark-top-left::after {
@@ -325,7 +325,7 @@ export class HTMLPDFGenerator {
               left: 3mm;
               width: 0;
               height: 3mm;
-              border-left: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
+              border-left: 0.5px solid rgba(255, 255, 255, 0.3) !important;
             }
             
             /* Top-right corner - horizontal line extends RIGHT, vertical line extends UP */
@@ -334,7 +334,7 @@ export class HTMLPDFGenerator {
               right: 0mm;
               width: 3mm;
               height: 0;
-              border-top: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
+              border-top: 0.5px solid rgba(0, 0, 0, 0.4) !important;
               border-right: none;
               border-bottom: none;
               border-left: none;
@@ -345,7 +345,7 @@ export class HTMLPDFGenerator {
               right: 0mm;
               width: 3mm;
               height: 0;
-              border-top: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
+              border-top: 0.5px solid rgba(255, 255, 255, 0.3) !important;
               border-right: none;
               border-bottom: none;
               border-left: none;
@@ -358,7 +358,7 @@ export class HTMLPDFGenerator {
               right: 3mm;
               width: 0;
               height: 3mm;
-              border-right: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
+              border-right: 0.5px solid rgba(0, 0, 0, 0.4) !important;
             }
             
             .crop-mark-back.crop-mark-top-right::after {
@@ -368,7 +368,7 @@ export class HTMLPDFGenerator {
               right: 3mm;
               width: 0;
               height: 3mm;
-              border-right: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
+              border-right: 0.5px solid rgba(255, 255, 255, 0.3) !important;
             }
             
             /* Bottom-left corner - horizontal line extends LEFT, vertical line extends DOWN */
@@ -377,7 +377,7 @@ export class HTMLPDFGenerator {
               left: 0mm;
               width: 3mm;
               height: 0;
-              border-bottom: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
+              border-bottom: 0.5px solid rgba(0, 0, 0, 0.4) !important;
               border-right: none;
               border-top: none;
               border-left: none;
@@ -388,7 +388,7 @@ export class HTMLPDFGenerator {
               left: 0mm;
               width: 3mm;
               height: 0;
-              border-bottom: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
+              border-bottom: 0.5px solid rgba(255, 255, 255, 0.3) !important;
               border-right: none;
               border-top: none;
               border-left: none;
@@ -401,7 +401,7 @@ export class HTMLPDFGenerator {
               left: 3mm;
               width: 0;
               height: 3mm;
-              border-left: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
+              border-left: 0.5px solid rgba(0, 0, 0, 0.4) !important;
             }
             
             .crop-mark-back.crop-mark-bottom-left::after {
@@ -411,7 +411,7 @@ export class HTMLPDFGenerator {
               left: 3mm;
               width: 0;
               height: 3mm;
-              border-left: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
+              border-left: 0.5px solid rgba(255, 255, 255, 0.3) !important;
             }
             
             /* Bottom-right corner - horizontal line extends RIGHT, vertical line extends DOWN */
@@ -420,7 +420,7 @@ export class HTMLPDFGenerator {
               right: 0mm;
               width: 3mm;
               height: 0;
-              border-bottom: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
+              border-bottom: 0.5px solid rgba(0, 0, 0, 0.4) !important;
               border-right: none;
               border-top: none;
               border-left: none;
@@ -431,7 +431,7 @@ export class HTMLPDFGenerator {
               right: 0mm;
               width: 3mm;
               height: 0;
-              border-bottom: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
+              border-bottom: 0.5px solid rgba(255, 255, 255, 0.3) !important;
               border-right: none;
               border-top: none;
               border-left: none;
@@ -444,7 +444,7 @@ export class HTMLPDFGenerator {
               right: 3mm;
               width: 0;
               height: 3mm;
-              border-right: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
+              border-right: 0.5px solid rgba(0, 0, 0, 0.4) !important;
             }
             
             .crop-mark-back.crop-mark-bottom-right::after {
@@ -454,7 +454,7 @@ export class HTMLPDFGenerator {
               right: 3mm;
               width: 0;
               height: 3mm;
-              border-right: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
+              border-right: 0.5px solid rgba(255, 255, 255, 0.3) !important;
             }
           </style>
         </head>
