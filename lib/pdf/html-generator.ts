@@ -285,13 +285,13 @@ export class HTMLPDFGenerator {
               border: 0.1pt solid rgba(255, 255, 255, 0.3);
             }
             
-            /* Top-left corner - extends UP and LEFT toward corner */
+            /* Top-left corner - horizontal line extends LEFT, vertical line extends UP */
             .crop-mark-front.crop-mark-top-left {
               top: 3mm;
-              left: 3mm;
+              left: 0mm;
               width: 3mm;
               height: 0;
-              border-top: 0.1pt solid rgba(0, 0, 0, 0.4);
+              border-top: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
               border-right: none;
               border-bottom: none;
               border-left: none;
@@ -299,10 +299,10 @@ export class HTMLPDFGenerator {
             
             .crop-mark-back.crop-mark-top-left {
               top: 3mm;
-              left: 3mm;
+              left: 0mm;
               width: 3mm;
               height: 0;
-              border-top: 0.1pt solid rgba(255, 255, 255, 0.3);
+              border-top: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
               border-right: none;
               border-bottom: none;
               border-left: none;
@@ -311,75 +311,73 @@ export class HTMLPDFGenerator {
             .crop-mark-front.crop-mark-top-left::after {
               content: '';
               position: absolute;
-              top: -0.05pt;
-              left: -0.05pt;
+              top: -3mm;
+              left: 3mm;
               width: 0;
               height: 3mm;
-              border-left: 0.1pt solid rgba(0, 0, 0, 0.4);
+              border-left: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
             }
             
             .crop-mark-back.crop-mark-top-left::after {
               content: '';
               position: absolute;
-              top: -0.05pt;
-              left: -0.05pt;
+              top: -3mm;
+              left: 3mm;
               width: 0;
               height: 3mm;
-              border-left: 0.1pt solid rgba(255, 255, 255, 0.3);
+              border-left: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
             }
             
-            /* Top-right corner - extends UP and RIGHT toward corner */
+            /* Top-right corner - horizontal line extends RIGHT, vertical line extends UP */
             .crop-mark-front.crop-mark-top-right {
               top: 3mm;
-              right: 3mm;
+              right: 0mm;
               width: 3mm;
               height: 0;
-              border-top: 0.1pt solid rgba(0, 0, 0, 0.4);
+              border-top: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
               border-right: none;
               border-bottom: none;
               border-left: none;
-              transform: translateX(3mm);
             }
             
             .crop-mark-back.crop-mark-top-right {
               top: 3mm;
-              right: 3mm;
+              right: 0mm;
               width: 3mm;
               height: 0;
-              border-top: 0.1pt solid rgba(255, 255, 255, 0.3);
+              border-top: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
               border-right: none;
               border-bottom: none;
               border-left: none;
-              transform: translateX(3mm);
             }
             
             .crop-mark-front.crop-mark-top-right::after {
               content: '';
               position: absolute;
-              top: -0.05pt;
-              right: -0.05pt;
+              top: -3mm;
+              right: 3mm;
               width: 0;
               height: 3mm;
-              border-right: 0.1pt solid rgba(0, 0, 0, 0.4);
+              border-right: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
             }
             
             .crop-mark-back.crop-mark-top-right::after {
               content: '';
               position: absolute;
-              top: -0.05pt;
-              right: -0.05pt;
+              top: -3mm;
+              right: 3mm;
               width: 0;
               height: 3mm;
-              border-right: 0.1pt solid rgba(255, 255, 255, 0.3);
+              border-right: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
             }
             
-            /* Bottom-left corner - extends DOWN and LEFT toward corner */
+            /* Bottom-left corner - horizontal line extends LEFT, vertical line extends DOWN */
             .crop-mark-front.crop-mark-bottom-left {
               bottom: 3mm;
-              left: 3mm;
+              left: 0mm;
               width: 3mm;
               height: 0;
-              border-bottom: 0.1pt solid rgba(0, 0, 0, 0.4);
+              border-bottom: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
               border-right: none;
               border-top: none;
               border-left: none;
@@ -387,10 +385,10 @@ export class HTMLPDFGenerator {
             
             .crop-mark-back.crop-mark-bottom-left {
               bottom: 3mm;
-              left: 3mm;
+              left: 0mm;
               width: 3mm;
               height: 0;
-              border-bottom: 0.1pt solid rgba(255, 255, 255, 0.3);
+              border-bottom: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
               border-right: none;
               border-top: none;
               border-left: none;
@@ -399,70 +397,64 @@ export class HTMLPDFGenerator {
             .crop-mark-front.crop-mark-bottom-left::after {
               content: '';
               position: absolute;
-              bottom: -0.05pt;
-              left: -0.05pt;
+              bottom: -3mm;
+              left: 3mm;
               width: 0;
               height: 3mm;
-              border-left: 0.1pt solid rgba(0, 0, 0, 0.4);
-              transform: translateY(-3mm);
+              border-left: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
             }
             
             .crop-mark-back.crop-mark-bottom-left::after {
               content: '';
               position: absolute;
-              bottom: -0.05pt;
-              left: -0.05pt;
+              bottom: -3mm;
+              left: 3mm;
               width: 0;
               height: 3mm;
-              border-left: 0.1pt solid rgba(255, 255, 255, 0.3);
-              transform: translateY(-3mm);
+              border-left: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
             }
             
-            /* Bottom-right corner - extends DOWN and RIGHT toward corner */
+            /* Bottom-right corner - horizontal line extends RIGHT, vertical line extends DOWN */
             .crop-mark-front.crop-mark-bottom-right {
               bottom: 3mm;
-              right: 3mm;
+              right: 0mm;
               width: 3mm;
               height: 0;
-              border-bottom: 0.1pt solid rgba(0, 0, 0, 0.4);
+              border-bottom: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
               border-right: none;
               border-top: none;
               border-left: none;
-              transform: translateX(3mm);
             }
             
             .crop-mark-back.crop-mark-bottom-right {
               bottom: 3mm;
-              right: 3mm;
+              right: 0mm;
               width: 3mm;
               height: 0;
-              border-bottom: 0.1pt solid rgba(255, 255, 255, 0.3);
+              border-bottom: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
               border-right: none;
               border-top: none;
               border-left: none;
-              transform: translateX(3mm);
             }
             
             .crop-mark-front.crop-mark-bottom-right::after {
               content: '';
               position: absolute;
-              bottom: -0.05pt;
-              right: -0.05pt;
+              bottom: -3mm;
+              right: 3mm;
               width: 0;
               height: 3mm;
-              border-right: 0.1pt solid rgba(0, 0, 0, 0.4);
-              transform: translateY(-3mm);
+              border-right: 0.05pt solid rgba(0, 0, 0, 0.4) !important;
             }
             
             .crop-mark-back.crop-mark-bottom-right::after {
               content: '';
               position: absolute;
-              bottom: -0.05pt;
-              right: -0.05pt;
+              bottom: -3mm;
+              right: 3mm;
               width: 0;
               height: 3mm;
-              border-right: 0.1pt solid rgba(255, 255, 255, 0.3);
-              transform: translateY(-3mm);
+              border-right: 0.05pt solid rgba(255, 255, 255, 0.3) !important;
             }
           </style>
         </head>
