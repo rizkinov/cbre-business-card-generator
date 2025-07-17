@@ -1,5 +1,6 @@
 import PDFDocument from 'pdfkit';
 import { BusinessCardData } from '@/types/business-card';
+import { splitTextByLines } from '@/utils/text-processing';
 
 // CMYK to RGB conversion (approximate)
 // These values are calibrated to match CBRE's CMYK requirements as closely as possible
@@ -82,6 +83,27 @@ export class PDFGenerator {
     // convert to CMYK profile during final processing.
   }
 
+  /**
+   * Helper method to render multi-line text with proper line spacing
+   */
+  private renderMultiLineText(text: string, x: number, y: number, options?: { lineHeight?: number; maxWidth?: number }): number {
+    const lines = splitTextByLines(text);
+    const lineHeight = options?.lineHeight || 12;
+    
+    let currentY = y;
+    
+    lines.forEach((line, index) => {
+      if (options?.maxWidth) {
+        this.doc.text(line.trim(), x, currentY, { width: options.maxWidth });
+      } else {
+        this.doc.text(line.trim(), x, currentY);
+      }
+      currentY += lineHeight;
+    });
+    
+    return currentY;
+  }
+
   // Generate front side of business card
   generateFront(data: BusinessCardData): PDFGenerator {
     // Create new page for front
@@ -160,81 +182,163 @@ export class PDFGenerator {
   }
 
   private addDesign1Content(data: BusinessCardData, greenBlockWidth: number, width: number, height: number): void {
-    // Use built-in fonts to avoid font file issues
+    // Left side content (main information)
+    let yPosition = 20;
+    
+    // Name
     this.doc
       .font('Helvetica-Bold')
-      .fillColor(CBRE_COLORS.white)
-      .fontSize(12)
-      .text('CBRE', greenBlockWidth - 60, 20);
-
+      .fillColor(CBRE_COLORS.darkGreen)
+      .fontSize(14);
+    
+    yPosition = this.renderMultiLineText(data.fullName, greenBlockWidth + 8, yPosition, { lineHeight: 16 });
+    
+    // Title and License
     this.doc
       .font('Helvetica')
       .fillColor(CBRE_COLORS.darkGrey)
-      .fontSize(14)
-      .text(data.fullName, greenBlockWidth + 10, 30);
-
-    // Add title
+      .fontSize(8);
+    
+    yPosition = this.renderMultiLineText(data.title, greenBlockWidth + 8, yPosition + 2, { lineHeight: 10 });
+    
+    if (data.licenseNumber) {
+      yPosition = this.renderMultiLineText(`Lic no. ${data.licenseNumber}`, greenBlockWidth + 8, yPosition, { lineHeight: 10 });
+    }
+    
+    // Office Information
+    yPosition += 8;
     this.doc
       .font('Helvetica')
       .fillColor(CBRE_COLORS.darkGrey)
-      .fontSize(10)
-      .text(data.title, greenBlockWidth + 10, 50);
-
-    // Add contact information
+      .fontSize(8);
+    
+    // Office Name
+    yPosition = this.renderMultiLineText(data.officeName, greenBlockWidth + 8, yPosition, { lineHeight: 10 });
+    
+    // Office Address
+    yPosition = this.renderMultiLineText(data.officeAddress, greenBlockWidth + 8, yPosition, { 
+      lineHeight: 10, 
+      maxWidth: width - greenBlockWidth - 80 
+    });
+    
+    // Website
     this.doc
       .font('Helvetica')
       .fillColor(CBRE_COLORS.darkGrey)
       .fontSize(8)
-      .text(data.email, greenBlockWidth + 10, 70)
-      .text(data.telephone, greenBlockWidth + 10, 85)
-      .text(data.mobile, greenBlockWidth + 10, 100);
+      .text('cbre.com', greenBlockWidth + 8, height - 25);
+    
+    // Right side content (contact info)
+    const rightX = width - 75;
+    let rightY = height - 50;
+    
+    this.doc
+      .font('Helvetica')
+      .fillColor(CBRE_COLORS.darkGrey)
+      .fontSize(8);
+    
+    this.renderMultiLineText(data.email, rightX, rightY, { lineHeight: 10 });
+    rightY += 12;
+    this.renderMultiLineText(`T ${data.telephone}`, rightX, rightY, { lineHeight: 10 });
+    rightY += 12;
+    this.renderMultiLineText(`M ${data.mobile}`, rightX, rightY, { lineHeight: 10 });
   }
 
   private addDesign2Content(data: BusinessCardData, width: number, height: number, stripeHeight: number): void {
-    // Use built-in fonts to avoid font file issues
+    // CBRE logo in the green stripe
     this.doc
       .font('Helvetica-Bold')
       .fillColor(CBRE_COLORS.white)
       .fontSize(12)
       .text('CBRE', 10, 10);
 
+    // Main content area
+    let yPosition = stripeHeight + 15;
+    
+    // Name
+    this.doc
+      .font('Helvetica-Bold')
+      .fillColor(CBRE_COLORS.darkGreen)
+      .fontSize(14);
+    
+    yPosition = this.renderMultiLineText(data.fullName, 10, yPosition, { lineHeight: 16 });
+    
+    // Title and License
     this.doc
       .font('Helvetica')
       .fillColor(CBRE_COLORS.darkGrey)
-      .fontSize(14)
-      .text(data.fullName, 10, stripeHeight + 20);
-
-    // Add title
+      .fontSize(8);
+    
+    yPosition = this.renderMultiLineText(data.title, 10, yPosition + 2, { lineHeight: 10 });
+    
+    if (data.licenseNumber) {
+      yPosition = this.renderMultiLineText(`Lic no. ${data.licenseNumber}`, 10, yPosition, { lineHeight: 10 });
+    }
+    
+    // Office Information
+    yPosition += 8;
     this.doc
       .font('Helvetica')
       .fillColor(CBRE_COLORS.darkGrey)
-      .fontSize(10)
-      .text(data.title, 10, stripeHeight + 40);
-
-    // Add contact information
+      .fontSize(8);
+    
+    // Office Name
+    yPosition = this.renderMultiLineText(data.officeName, 10, yPosition, { lineHeight: 10 });
+    
+    // Office Address
+    yPosition = this.renderMultiLineText(data.officeAddress, 10, yPosition, { 
+      lineHeight: 10, 
+      maxWidth: width - 80 
+    });
+    
+    // Website at bottom left
     this.doc
       .font('Helvetica')
       .fillColor(CBRE_COLORS.darkGrey)
       .fontSize(8)
-      .text(data.email, 10, stripeHeight + 60)
-      .text(data.telephone, 10, stripeHeight + 75)
-      .text(data.mobile, 10, stripeHeight + 90);
+      .text('cbre.com', 10, height - 25);
+    
+    // Contact information at bottom right
+    const rightX = width - 75;
+    let rightY = height - 50;
+    
+    this.doc
+      .font('Helvetica')
+      .fillColor(CBRE_COLORS.darkGrey)
+      .fontSize(8);
+    
+    this.renderMultiLineText(data.email, rightX, rightY, { lineHeight: 10 });
+    rightY += 12;
+    this.renderMultiLineText(`T ${data.telephone}`, rightX, rightY, { lineHeight: 10 });
+    rightY += 12;
+    this.renderMultiLineText(`M ${data.mobile}`, rightX, rightY, { lineHeight: 10 });
   }
 
   private addBackContent(data: BusinessCardData, width: number, height: number): void {
-    // Use built-in fonts to avoid font file issues
+    // Centered CBRE logo
     this.doc
       .font('Helvetica-Bold')
       .fillColor(CBRE_COLORS.white)
       .fontSize(16)
-      .text('CBRE', width / 2, height / 2, { align: 'center' });
+      .text('CBRE', width / 2, height / 2 - 10, { align: 'center' });
 
-    // Add office information
+    // Office information with line break support
     this.doc
       .font('Helvetica')
       .fillColor(CBRE_COLORS.white)
-      .fontSize(8)
-      .text(data.officeName, width / 2, height / 2 + 20, { align: 'center' });
+      .fontSize(8);
+    
+    const centerX = width / 2;
+    let yPosition = height / 2 + 15;
+    
+    // Office name
+    yPosition = this.renderMultiLineText(data.officeName, centerX, yPosition, { lineHeight: 10 });
+    
+    // Office address
+    this.renderMultiLineText(data.officeAddress, centerX, yPosition + 5, { 
+      lineHeight: 10,
+      maxWidth: width - 20
+    });
   }
 
   // Generate PDF buffer
