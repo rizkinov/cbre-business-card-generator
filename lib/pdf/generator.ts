@@ -202,7 +202,7 @@ export class PDFGenerator {
     yPosition = this.renderMultiLineText(data.title, greenBlockWidth + 8, yPosition + 2, { lineHeight: 10 });
     
     if (data.licenseNumber) {
-      yPosition = this.renderMultiLineText(`Lic no. ${data.licenseNumber}`, greenBlockWidth + 8, yPosition, { lineHeight: 10 });
+      yPosition = this.renderMultiLineText(`Lic No. ${data.licenseNumber}`, greenBlockWidth + 8, yPosition, { lineHeight: 10 });
     }
     
     // Office Information
@@ -272,7 +272,7 @@ export class PDFGenerator {
     yPosition = this.renderMultiLineText(data.title, 10, yPosition + 2, { lineHeight: 10 });
     
     if (data.licenseNumber) {
-      yPosition = this.renderMultiLineText(`Lic no. ${data.licenseNumber}`, 10, yPosition, { lineHeight: 10 });
+      yPosition = this.renderMultiLineText(`Lic No. ${data.licenseNumber}`, 10, yPosition, { lineHeight: 10 });
     }
     
     // Office Information

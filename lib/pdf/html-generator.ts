@@ -158,7 +158,7 @@ export class HTMLPDFGenerator {
               width: 35mm;
               background-color: #f8f8f8;
               vertical-align: top;
-              padding: ${8 + bleedOffset}mm ${5 + bleedOffset}mm ${4 + bleedOffset}mm ${4 + bleedOffset}mm;
+              padding: ${8 + bleedOffset}mm ${5 + bleedOffset}mm ${4 + bleedOffset}mm ${2 + bleedOffset}mm;
               position: relative;
             }
             
@@ -495,7 +495,7 @@ export class HTMLPDFGenerator {
             <div class="name">${escapeHtmlPreservingLineBreaks(data.fullName)}</div>
             <div class="title-license">
               <div>${escapeHtmlPreservingLineBreaks(data.title)}</div>
-              ${data.licenseNumber ? `<div>Lic no. ${escapeHtmlPreservingLineBreaks(data.licenseNumber)}</div>` : ''}
+              ${data.licenseNumber ? `<div>Lic No. ${escapeHtmlPreservingLineBreaks(data.licenseNumber)}</div>` : ''}
             </div>
             <div class="company-info">
               <div class="company-name">${escapeHtmlPreservingLineBreaks(data.officeName)}</div>
@@ -531,7 +531,7 @@ export class HTMLPDFGenerator {
             <div class="name">${escapeHtmlPreservingLineBreaks(data.fullName)}</div>
             <div class="title-license">
               <div>${escapeHtmlPreservingLineBreaks(data.title)}</div>
-              ${data.licenseNumber ? `<div>Lic no. ${escapeHtmlPreservingLineBreaks(data.licenseNumber)}</div>` : ''}
+              ${data.licenseNumber ? `<div>Lic No. ${escapeHtmlPreservingLineBreaks(data.licenseNumber)}</div>` : ''}
             </div>
             <div class="company-info">
               <div class="company-name">${escapeHtmlPreservingLineBreaks(data.officeName)}</div>
