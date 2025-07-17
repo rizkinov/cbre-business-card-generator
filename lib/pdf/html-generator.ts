@@ -46,6 +46,9 @@ export class HTMLPDFGenerator {
     // Use absolute URLs for production, relative for development
     const isProduction = process.env.NODE_ENV === 'production';
     const fontBaseUrl = isProduction ? 'https://cbre-business-card.vercel.app' : '';
+    
+    // Green stripe width: 3mm normal, 6mm with bleed (extends 3mm left into bleed area)
+    const greenStripeWidth = this.options.includeBleed ? '6mm' : '3mm';
 
     return `
       <!DOCTYPE html>
@@ -124,7 +127,7 @@ export class HTMLPDFGenerator {
             }
             
             .green-stripe {
-              width: 3mm;
+              width: ${greenStripeWidth};
               background-color: #f8f8f8;
               padding: 0;
               vertical-align: top;
