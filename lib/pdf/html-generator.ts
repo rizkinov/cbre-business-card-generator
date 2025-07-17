@@ -49,6 +49,9 @@ export class HTMLPDFGenerator {
     
     // Green stripe width: 3mm normal, 6mm with bleed (extends 3mm left into bleed area)
     const greenStripeWidth = this.options.includeBleed ? '6mm' : '3mm';
+    
+    // Content positioning: shift 3mm inward when bleed is enabled to maintain original design
+    const bleedOffset = this.options.includeBleed ? 3 : 0;
 
     return `
       <!DOCTYPE html>
@@ -136,8 +139,8 @@ export class HTMLPDFGenerator {
             
             .green-bar {
               position: absolute;
-              top: 8mm;
-              bottom: 8mm;
+              top: ${8 + bleedOffset}mm;
+              bottom: ${8 + bleedOffset}mm;
               left: 0;
               right: 0;
               background-color: #003F2D;
@@ -146,7 +149,7 @@ export class HTMLPDFGenerator {
             .main-content {
               background-color: #f8f8f8;
               vertical-align: top;
-              padding: 8mm 0 0 3mm;
+              padding: ${8 + bleedOffset}mm 0 0 ${3 + bleedOffset}mm;
               position: relative;
               width: 51mm;
             }
@@ -155,7 +158,7 @@ export class HTMLPDFGenerator {
               width: 35mm;
               background-color: #f8f8f8;
               vertical-align: top;
-              padding: 8mm 5mm 4mm 4mm;
+              padding: ${8 + bleedOffset}mm ${5 + bleedOffset}mm ${4 + bleedOffset}mm 4mm;
               position: relative;
             }
             
@@ -205,14 +208,14 @@ export class HTMLPDFGenerator {
               font-size: 7pt;
               color: #435254;
               position: absolute;
-              bottom: 8mm;
-              left: 3mm;
+              bottom: ${8 + bleedOffset}mm;
+              left: ${3 + bleedOffset}mm;
             }
             
             .logo {
               position: absolute;
-              top: 8mm;
-              right: 5mm;
+              top: ${8 + bleedOffset}mm;
+              right: ${5 + bleedOffset}mm;
               margin-bottom: 6mm;
             }
             
@@ -231,8 +234,8 @@ export class HTMLPDFGenerator {
               line-height: 1.1;
               white-space: nowrap;
               position: absolute;
-              bottom: 8mm;
-              right: 5mm;
+              bottom: ${8 + bleedOffset}mm;
+              right: ${5 + bleedOffset}mm;
             }
             
             .contact-info div {
@@ -264,11 +267,112 @@ export class HTMLPDFGenerator {
             .text-center {
               text-align: center;
             }
+            
+            /* Crop marks - only visible when bleed is enabled */
+            .crop-marks {
+              display: ${this.options.includeBleed ? 'block' : 'none'};
+            }
+            
+            .crop-mark {
+              position: absolute;
+              border: 0.25pt solid rgba(0, 0, 0, 0.4);
+            }
+            
+            .crop-mark-top-left {
+              top: 1mm;
+              left: 1mm;
+              width: 2mm;
+              height: 0;
+              border-top: 0.25pt solid rgba(0, 0, 0, 0.4);
+              border-right: none;
+              border-bottom: none;
+              border-left: none;
+            }
+            
+            .crop-mark-top-left::after {
+              content: '';
+              position: absolute;
+              top: -0.125pt;
+              left: -0.125pt;
+              width: 0;
+              height: 2mm;
+              border-left: 0.25pt solid rgba(0, 0, 0, 0.4);
+            }
+            
+            .crop-mark-top-right {
+              top: 1mm;
+              right: 1mm;
+              width: 2mm;
+              height: 0;
+              border-top: 0.25pt solid rgba(0, 0, 0, 0.4);
+              border-right: none;
+              border-bottom: none;
+              border-left: none;
+            }
+            
+            .crop-mark-top-right::after {
+              content: '';
+              position: absolute;
+              top: -0.125pt;
+              right: -0.125pt;
+              width: 0;
+              height: 2mm;
+              border-right: 0.25pt solid rgba(0, 0, 0, 0.4);
+            }
+            
+            .crop-mark-bottom-left {
+              bottom: 1mm;
+              left: 1mm;
+              width: 2mm;
+              height: 0;
+              border-bottom: 0.25pt solid rgba(0, 0, 0, 0.4);
+              border-right: none;
+              border-top: none;
+              border-left: none;
+            }
+            
+            .crop-mark-bottom-left::after {
+              content: '';
+              position: absolute;
+              bottom: -0.125pt;
+              left: -0.125pt;
+              width: 0;
+              height: 2mm;
+              border-left: 0.25pt solid rgba(0, 0, 0, 0.4);
+            }
+            
+            .crop-mark-bottom-right {
+              bottom: 1mm;
+              right: 1mm;
+              width: 2mm;
+              height: 0;
+              border-bottom: 0.25pt solid rgba(0, 0, 0, 0.4);
+              border-right: none;
+              border-top: none;
+              border-left: none;
+            }
+            
+            .crop-mark-bottom-right::after {
+              content: '';
+              position: absolute;
+              bottom: -0.125pt;
+              right: -0.125pt;
+              width: 0;
+              height: 2mm;
+              border-right: 0.25pt solid rgba(0, 0, 0, 0.4);
+            }
           </style>
         </head>
         <body>
           <div style="width: ${width}mm; height: ${height}mm; margin: 0; padding: 0; position: relative; page-break-after: always;">
             ${frontHTML}
+            <!-- Crop marks for professional printing -->
+            <div class="crop-marks">
+              <div class="crop-mark crop-mark-top-left"></div>
+              <div class="crop-mark crop-mark-top-right"></div>
+              <div class="crop-mark crop-mark-bottom-left"></div>
+              <div class="crop-mark crop-mark-bottom-right"></div>
+            </div>
           </div>
           <div style="width: ${width}mm; height: ${height}mm; margin: 0; padding: 0; position: relative; overflow: visible;">
             ${backHTML}
@@ -353,11 +457,12 @@ export class HTMLPDFGenerator {
   private generateBackHTML(data: BusinessCardData, width: number, height: number): string {
     const cardWidth = this.options.includeBleed ? CARD_DIMENSIONS.bleedWidth : CARD_DIMENSIONS.width;
     const cardHeight = this.options.includeBleed ? CARD_DIMENSIONS.bleedHeight : CARD_DIMENSIONS.height;
+    const bleedOffset = this.options.includeBleed ? 3 : 0;
     
     return `
       <div style="width: ${cardWidth}mm; height: ${cardHeight}mm; background-color: #003F2D; position: relative; margin: 0; padding: 0; box-sizing: border-box;">
         <!-- Recycle Icon -->
-        <svg style="width: 6mm; height: 6mm; fill: rgba(255, 255, 255, 0.5); position: absolute; bottom: 5mm; right: 5mm;" viewBox="0 -8 72 72" xmlns="http://www.w3.org/2000/svg">
+        <svg style="width: 6mm; height: 6mm; fill: rgba(255, 255, 255, 0.5); position: absolute; bottom: ${5 + bleedOffset}mm; right: ${5 + bleedOffset}mm;" viewBox="0 -8 72 72" xmlns="http://www.w3.org/2000/svg">
           <path d="M24.42,30.55,27,32.1c.42,0,.64-.18.64-.53a2.3,2.3,0,0,0-.3-.94l-5.6-10.51-12.39.3a.78.78,0,0,0-.84.87c0,.13.18.3.53.53l2.57,1.55L8.84,27.6a6.15,6.15,0,0,0-1.13,3A4.91,4.91,0,0,0,8.46,33l8.43,14.7a12.58,12.58,0,0,1-.3-2.64A8,8,0,0,1,18,40.64l6.43-10.09Z"/>
           <path d="M27.67,22,34.62,11.2q-3.9-8.88-8.28-8.88c-1.76,0-2.94.49-3.55,1.47L16.21,14.3,27.67,22Z"/>
           <path d="M22,51.15H35.41V37.2H22.49a47.41,47.41,0,0,0-3,4.61,8.66,8.66,0,0,0-1,3.93q0,5.41,3.48,5.41Z"/>
