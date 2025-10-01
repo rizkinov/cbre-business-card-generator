@@ -57,13 +57,17 @@ export function FormFields({ form, isSubmitting = false }: FormFieldsProps) {
             <Label htmlFor="title" className="text-sm font-medium">
               Title *
             </Label>
-            <Input
+            <Textarea
               id="title"
               {...register('title')}
-              className={`${errors.title ? 'border-red-500' : ''}`}
-              placeholder="Director, GWS APAC"
+              className={`${errors.title ? 'border-red-500' : ''} min-h-[60px]`}
+              placeholder="Director, GWS APAC&#10;(Press Enter for second line)"
               disabled={isSubmitting}
             />
+            <div className="flex items-center gap-1 text-gray-600 text-xs">
+              <Info className="w-3 h-3" />
+              <span>Press Enter to add a second line</span>
+            </div>
             {errors.title && (
               <div className="flex items-center gap-1 text-red-500 text-xs">
                 <AlertCircle className="w-3 h-3" />
