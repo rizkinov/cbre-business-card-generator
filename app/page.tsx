@@ -1,12 +1,10 @@
 "use client";
 
-import { useState } from 'react';
-import { CBREStyledCard } from "@/src/components/cbre/CBREStyledCard";
 import { CBRETabs } from "@/src/components/cbre/CBRETabs";
 import { TabsList, TabsTrigger, TabsContent } from "@/src/components/ui/tabs";
-import { Badge } from "@/src/components/ui/badge";
 import { CardEditor } from "@/src/components/business-card/CardEditor";
 import { CSVUploader } from "@/src/components/business-card/CSVUploader";
+import { PasswordGate } from "@/src/components/auth/PasswordGate";
 import { FileText, Upload } from "lucide-react";
 
 export default function Home() {
@@ -19,87 +17,67 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+    <PasswordGate>
+    <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-4">
-              <div className="w-8 h-8 bg-cbre-green rounded-md flex items-center justify-center">
-                <FileText className="w-5 h-5 text-white" />
-              </div>
-              <div>
-                <h1 className="text-xl font-financier font-semibold text-cbre-green">
-                  CBRE Business Card Editor
-                </h1>
-                <p className="text-sm text-gray-600">Generate print-ready CMYK PDFs</p>
-              </div>
-            </div>
-            <Badge variant="outline" className="bg-accent-green/10 text-accent-green border-accent-green">
-              v1.0.0
-            </Badge>
+      <header className="bg-white border-b border-gray-200 sticky top-0 z-50 shadow-sm">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8">
+          <div className="flex flex-col justify-center h-20">
+            <p className="text-[10px] text-gray-400 uppercase tracking-[0.2em] font-medium mb-0.5">THE CREATIVE COE</p>
+            <h1 className="text-2xl font-financier text-cbre-dark-green tracking-tight">
+              Business Card Generator
+            </h1>
           </div>
         </div>
       </header>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Hero Section */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-financier font-semibold text-cbre-green mb-4">
-            Professional Business Cards Made Easy
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Create print-ready CBRE business cards with our professional editor. 
-            Generate single cards or batch process up to 20 cards with CSV upload.
-          </p>
-        </div>
-
+      <main className="max-w-4xl mx-auto px-6 lg:px-8 py-10">
         {/* Main Editor Interface */}
-        <CBREStyledCard 
-          title="Choose Your Method"
-          description="Create a single card or batch process multiple cards"
-          className="max-w-6xl mx-auto"
-        >
+        <div className="w-full">
           <CBRETabs defaultValue="single" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8">
-              <TabsTrigger value="single" className="flex items-center gap-2">
+            <TabsList className="grid grid-cols-2 w-full mb-8 !bg-transparent p-0 h-auto border-b border-gray-200 !rounded-none">
+              <TabsTrigger
+                value="single"
+                className="flex items-center justify-center gap-2 py-3 !rounded-none text-sm font-medium text-gray-400 !shadow-none !bg-transparent border-b-[3px] border-transparent -mb-px data-[state=active]:text-[#003F2D] data-[state=active]:border-[#003F2D]"
+              >
                 <FileText className="w-4 h-4" />
                 Single Card
               </TabsTrigger>
-              <TabsTrigger value="batch" className="flex items-center gap-2">
+              <TabsTrigger
+                value="batch"
+                className="flex items-center justify-center gap-2 py-3 !rounded-none text-sm font-medium text-gray-400 !shadow-none !bg-transparent border-b-[3px] border-transparent -mb-px data-[state=active]:text-[#003F2D] data-[state=active]:border-[#003F2D]"
+              >
                 <Upload className="w-4 h-4" />
                 Batch CSV
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="single">
-              <CardEditor 
+            <TabsContent value="single" className="mt-0">
+              <CardEditor
                 onError={handleError}
               />
             </TabsContent>
 
-            <TabsContent value="batch">
-              <CSVUploader 
+            <TabsContent value="batch" className="mt-0">
+              <CSVUploader
                 onSuccess={handleBatchSuccess}
                 onError={handleError}
               />
             </TabsContent>
           </CBRETabs>
-        </CBREStyledCard>
+        </div>
       </main>
 
       {/* Footer */}
-      <footer className="bg-white border-t mt-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center text-gray-600">
-            <p className="mb-2">© 2024 CBRE Business Card Editor</p>
-            <p className="text-sm">
-              Professional business card generator • Files expire after 24 hours
-            </p>
+      <footer className="bg-white border-t border-gray-200 mt-12">
+        <div className="max-w-4xl mx-auto px-6 lg:px-8 py-6">
+          <div className="text-center text-gray-500 text-sm">
+            <p>© {new Date().getFullYear()} CBRE Business Card Editor • Files expire after 24 hours</p>
           </div>
         </div>
       </footer>
     </div>
+    </PasswordGate>
   );
 }

@@ -34,17 +34,17 @@ export function CBREStyledCard({
   footerAction
 }: CBREStyledCardProps) {
   const accentColorMap = {
-    'default': 'border-t-cbre-green',
-    'accent-green': 'border-t-accent-green',
-    'dark-grey': 'border-t-dark-grey',
-    'sage': 'border-t-sage',
-    'celadon': 'border-t-celadon'
+    'default': 'border-gray-200',
+    'accent-green': 'border-accent-green',
+    'dark-grey': 'border-dark-grey',
+    'sage': 'border-sage',
+    'celadon': 'border-celadon'
   };
-  
+
   return (
-    <Card className={cn("flex flex-col border-t-4", accentColorMap[accentColor], className)}>
+    <Card className={cn("flex flex-col border shadow-none rounded-none", accentColorMap[accentColor], className)}>
       <CardHeader className={headerClassName}>
-        <CardTitle className="text-cbre-green font-financier">{title}</CardTitle>
+        <CardTitle className="text-cbre-dark-green font-financier text-xl font-normal">{title}</CardTitle>
         {description && <CardDescription className="text-dark-grey">{description}</CardDescription>}
       </CardHeader>
       <CardContent className="flex-grow text-dark-grey">
@@ -52,9 +52,9 @@ export function CBREStyledCard({
       </CardContent>
       {footerAction && (
         <CardFooter className={footerClassName}>
-          <Button 
-            variant="ghost" 
-            size="sm" 
+          <Button
+            variant="ghost"
+            size="sm"
             className="text-cbre-green p-0 hover:bg-transparent hover:text-accent-green"
             onClick={footerAction.onClick}
           >

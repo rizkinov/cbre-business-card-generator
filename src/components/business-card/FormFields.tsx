@@ -2,11 +2,10 @@
 
 import React from 'react';
 import { UseFormReturn } from 'react-hook-form';
-import { Input } from "@/src/components/ui/input";
+import { CBREInput } from "@/src/components/cbre/CBREInput";
+import { CBRETextarea } from "@/src/components/cbre/CBRETextarea";
+import { Checkbox } from "@/src/components/cbre/CBRECheckbox";
 import { Label } from "@/src/components/ui/label";
-import { Textarea } from "@/src/components/ui/textarea";
-import { Checkbox } from "@/src/components/ui/checkbox";
-import { CBREBadge } from "@/src/components/cbre/CBREBadge";
 import { BusinessCardFormData } from "@/types/business-card";
 import { AlertCircle, Info } from "lucide-react";
 
@@ -17,35 +16,32 @@ interface FormFieldsProps {
 
 export function FormFields({ form, isSubmitting = false }: FormFieldsProps) {
   const { register, formState: { errors }, watch, setValue } = form;
-  
+
   const watchedBleed = watch('includeBleed');
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Personal Information Section */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-lg font-financier font-medium text-cbre-green">
-            Personal Information
-          </h3>
-          <CBREBadge variant="outline" className="text-xs">Required</CBREBadge>
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-base font-semibold text-gray-900">Personal Information</h3>
+          <span className="text-xs text-gray-400">Required</span>
         </div>
-        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Full Name */}
-          <div className="space-y-2">
-            <Label htmlFor="fullName" className="text-sm font-medium">
+          <div className="space-y-1.5">
+            <Label htmlFor="fullName" className="text-sm text-gray-600">
               Full Name *
             </Label>
-            <Input
+            <CBREInput
               id="fullName"
               {...register('fullName')}
-              className={`${errors.fullName ? 'border-red-500' : ''}`}
+              error={!!errors.fullName}
               placeholder="John Doe"
               disabled={isSubmitting}
             />
             {errors.fullName && (
-              <div className="flex items-center gap-1 text-red-500 text-xs">
+              <div className="flex items-center gap-1 text-red-600 text-xs">
                 <AlertCircle className="w-3 h-3" />
                 {errors.fullName.message}
               </div>
@@ -53,23 +49,24 @@ export function FormFields({ form, isSubmitting = false }: FormFieldsProps) {
           </div>
 
           {/* Title */}
-          <div className="space-y-2">
-            <Label htmlFor="title" className="text-sm font-medium">
+          <div className="space-y-1.5">
+            <Label htmlFor="title" className="text-sm text-gray-600">
               Title *
             </Label>
-            <Textarea
+            <CBRETextarea
               id="title"
               {...register('title')}
-              className={`${errors.title ? 'border-red-500' : ''} min-h-[60px]`}
-              placeholder="Director, GWS APAC&#10;(Press Enter for second line)"
+              error={!!errors.title}
+              className="min-h-[60px]"
+              placeholder="Director, GWS APAC"
               disabled={isSubmitting}
             />
-            <div className="flex items-center gap-1 text-gray-600 text-xs">
+            <div className="flex items-center gap-1 text-gray-400 text-xs">
               <Info className="w-3 h-3" />
               <span>Press Enter to add a second line</span>
             </div>
             {errors.title && (
-              <div className="flex items-center gap-1 text-red-500 text-xs">
+              <div className="flex items-center gap-1 text-red-600 text-xs">
                 <AlertCircle className="w-3 h-3" />
                 {errors.title.message}
               </div>
@@ -77,20 +74,19 @@ export function FormFields({ form, isSubmitting = false }: FormFieldsProps) {
           </div>
 
           {/* License Number */}
-          <div className="space-y-2">
-            <Label htmlFor="licenseNumber" className="text-sm font-medium">
-              License Number
-              <span className="text-gray-500 ml-1">(Optional)</span>
+          <div className="space-y-1.5">
+            <Label htmlFor="licenseNumber" className="text-sm text-gray-600">
+              License Number <span className="text-gray-400">(Optional)</span>
             </Label>
-            <Input
+            <CBREInput
               id="licenseNumber"
               {...register('licenseNumber')}
-              className={`${errors.licenseNumber ? 'border-red-500' : ''}`}
+              error={!!errors.licenseNumber}
               placeholder="1234AB"
               disabled={isSubmitting}
             />
             {errors.licenseNumber && (
-              <div className="flex items-center gap-1 text-red-500 text-xs">
+              <div className="flex items-center gap-1 text-red-600 text-xs">
                 <AlertCircle className="w-3 h-3" />
                 {errors.licenseNumber.message}
               </div>
@@ -98,52 +94,51 @@ export function FormFields({ form, isSubmitting = false }: FormFieldsProps) {
           </div>
 
           {/* Email */}
-          <div className="space-y-2">
-            <Label htmlFor="email" className="text-sm font-medium">
+          <div className="space-y-1.5">
+            <Label htmlFor="email" className="text-sm text-gray-600">
               Email Address *
             </Label>
-            <Input
+            <CBREInput
               id="email"
               type="email"
               {...register('email')}
-              className={`${errors.email ? 'border-red-500' : ''}`}
+              error={!!errors.email}
               placeholder="john.doe@cbre.com"
               disabled={isSubmitting}
             />
             {errors.email && (
-              <div className="flex items-center gap-1 text-red-500 text-xs">
+              <div className="flex items-center gap-1 text-red-600 text-xs">
                 <AlertCircle className="w-3 h-3" />
                 {errors.email.message}
               </div>
             )}
           </div>
         </div>
-      </div>
+      </section>
+
+      <hr className="border-gray-200" />
 
       {/* Office Information Section */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-lg font-financier font-medium text-cbre-green">
-            Office Information
-          </h3>
-          <CBREBadge variant="outline" className="text-xs">Required</CBREBadge>
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-base font-semibold text-gray-900">Office Information</h3>
+          <span className="text-xs text-gray-400">Required</span>
         </div>
-        
         <div className="grid grid-cols-1 gap-4">
           {/* Office Name */}
-          <div className="space-y-2">
-            <Label htmlFor="officeName" className="text-sm font-medium">
+          <div className="space-y-1.5">
+            <Label htmlFor="officeName" className="text-sm text-gray-600">
               Office Name *
             </Label>
-            <Input
+            <CBREInput
               id="officeName"
               {...register('officeName')}
-              className={`${errors.officeName ? 'border-red-500' : ''}`}
+              error={!!errors.officeName}
               placeholder="CBRE GWS APAC"
               disabled={isSubmitting}
             />
             {errors.officeName && (
-              <div className="flex items-center gap-1 text-red-500 text-xs">
+              <div className="flex items-center gap-1 text-red-600 text-xs">
                 <AlertCircle className="w-3 h-3" />
                 {errors.officeName.message}
               </div>
@@ -151,52 +146,52 @@ export function FormFields({ form, isSubmitting = false }: FormFieldsProps) {
           </div>
 
           {/* Office Address */}
-          <div className="space-y-2">
-            <Label htmlFor="officeAddress" className="text-sm font-medium">
+          <div className="space-y-1.5">
+            <Label htmlFor="officeAddress" className="text-sm text-gray-600">
               Office Address *
             </Label>
-            <Textarea
+            <CBRETextarea
               id="officeAddress"
               {...register('officeAddress')}
-              className={`${errors.officeAddress ? 'border-red-500' : ''} min-h-[80px]`}
+              error={!!errors.officeAddress}
+              className="min-h-[80px]"
               placeholder="18.01, Level 18, 1Powerhouse Persiaran Bandar Utama, Bandar Utama, Petaling Jaya, Selangor 47800, Malaysia"
               disabled={isSubmitting}
             />
             {errors.officeAddress && (
-              <div className="flex items-center gap-1 text-red-500 text-xs">
+              <div className="flex items-center gap-1 text-red-600 text-xs">
                 <AlertCircle className="w-3 h-3" />
                 {errors.officeAddress.message}
               </div>
             )}
           </div>
         </div>
-      </div>
+      </section>
+
+      <hr className="border-gray-200" />
 
       {/* Contact Information Section */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-lg font-financier font-medium text-cbre-green">
-            Contact Information
-          </h3>
-          <CBREBadge variant="outline" className="text-xs">Required</CBREBadge>
+      <section>
+        <div className="flex items-center justify-between mb-4">
+          <h3 className="text-base font-semibold text-gray-900">Contact Information</h3>
+          <span className="text-xs text-gray-400">Required</span>
         </div>
-        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {/* Telephone */}
-          <div className="space-y-2">
-            <Label htmlFor="telephone" className="text-sm font-medium">
+          <div className="space-y-1.5">
+            <Label htmlFor="telephone" className="text-sm text-gray-600">
               Telephone *
             </Label>
-            <Input
+            <CBREInput
               id="telephone"
               type="tel"
               {...register('telephone')}
-              className={`${errors.telephone ? 'border-red-500' : ''}`}
+              error={!!errors.telephone}
               placeholder="03-12345678"
               disabled={isSubmitting}
             />
             {errors.telephone && (
-              <div className="flex items-center gap-1 text-red-500 text-xs">
+              <div className="flex items-center gap-1 text-red-600 text-xs">
                 <AlertCircle className="w-3 h-3" />
                 {errors.telephone.message}
               </div>
@@ -204,59 +199,51 @@ export function FormFields({ form, isSubmitting = false }: FormFieldsProps) {
           </div>
 
           {/* Mobile */}
-          <div className="space-y-2">
-            <Label htmlFor="mobile" className="text-sm font-medium">
+          <div className="space-y-1.5">
+            <Label htmlFor="mobile" className="text-sm text-gray-600">
               Mobile *
             </Label>
-            <Input
+            <CBREInput
               id="mobile"
               type="tel"
               {...register('mobile')}
-              className={`${errors.mobile ? 'border-red-500' : ''}`}
+              error={!!errors.mobile}
               placeholder="012-3456789"
               disabled={isSubmitting}
             />
             {errors.mobile && (
-              <div className="flex items-center gap-1 text-red-500 text-xs">
+              <div className="flex items-center gap-1 text-red-600 text-xs">
                 <AlertCircle className="w-3 h-3" />
                 {errors.mobile.message}
               </div>
             )}
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Design Options Section */}
-      <div className="space-y-4">
-        <div className="flex items-center gap-2 mb-4">
-          <h3 className="text-lg font-financier font-medium text-cbre-green">
-            Options
-          </h3>
-        </div>
-        
-        <div className="space-y-4">
-          {/* 3mm Bleed Toggle */}
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <Checkbox
-                id="includeBleed"
-                checked={watchedBleed}
-                onCheckedChange={(checked: boolean) => setValue('includeBleed', checked)}
-                disabled={isSubmitting}
-              />
-              <Label htmlFor="includeBleed" className="text-sm font-medium">
-                Include 3mm bleed for professional printing
-              </Label>
-            </div>
-            <div className="flex items-center gap-1 text-gray-600 text-xs">
-              <Info className="w-3 h-3" />
-              <span>
-                Bleed adds 3mm border around the card (final size: 95mm × 56mm)
-              </span>
-            </div>
+      <hr className="border-gray-200" />
+
+      {/* Options Section */}
+      <section>
+        <h3 className="text-base font-semibold text-gray-900 mb-4">Options</h3>
+        <div className="flex items-start gap-3">
+          <Checkbox
+            id="includeBleed"
+            checked={watchedBleed}
+            onCheckedChange={(checked: boolean) => setValue('includeBleed', checked)}
+            disabled={isSubmitting}
+            className="mt-0.5"
+          />
+          <div className="space-y-0.5">
+            <Label htmlFor="includeBleed" className="text-sm text-gray-700 cursor-pointer leading-none">
+              Include 3mm bleed for professional printing
+            </Label>
+            <p className="text-xs text-gray-400">
+              Bleed adds 3mm border around the card (final size: 95mm × 56mm)
+            </p>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   );
-} 
+}

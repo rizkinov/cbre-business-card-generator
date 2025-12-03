@@ -25,4 +25,6 @@ export * from './CBREThemeProvider';
 export * from './CBREToast';
 export * from './CBREToggle';
 export * from './CBREToggleGroup';
-export * from './CBRETooltip'; 
+export * from './CBRETooltip';
+export * from './CBREInput';
+export * from './CBRETextarea'; 

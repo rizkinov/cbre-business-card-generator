@@ -4,12 +4,10 @@ import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { CBREButton } from "@/src/components/cbre/CBREButton";
-import { CBREStyledCard } from "@/src/components/cbre/CBREStyledCard";
 import { toast } from "@/src/components/cbre/CBREToast";
 import { FormFields } from "./FormFields";
 import { businessCardFormSchema } from "@/utils/validation";
 import { BusinessCardFormData } from "@/types/business-card";
-import { API_ENDPOINTS } from "@/utils/constants";
 import { FileText, Download, Loader2, CheckCircle } from "lucide-react";
 
 interface CardEditorProps {
@@ -31,12 +29,12 @@ export function CardEditor({ onError }: CardEditorProps) {
       email: '',
       telephone: '',
       mobile: '',
-      includeBleed: false
+      includeBleed: true
     },
     mode: 'onChange'
   });
 
-  const { handleSubmit, formState: { isValid, errors } } = form;
+  const { handleSubmit, formState: { isValid, errors }, watch } = form;
 
   const onSubmit = async (data: BusinessCardFormData) => {
     setIsSubmitting(true);
@@ -65,17 +63,17 @@ export function CardEditor({ onError }: CardEditorProps) {
 
       // Get the file info from response
       const result = await response.json();
-      
+
       if (result.success && result.downloadUrl) {
         // Open download URL in new tab
         window.open(result.downloadUrl, '_blank');
-        
+
         setLastGenerated(result.downloadUrl); // Store download URL
-        
+
         // Show success toast with expiration info
         const expiresAt = new Date(result.expiresAt);
         const expiresInHours = Math.ceil((expiresAt.getTime() - Date.now()) / (1000 * 60 * 60));
-        
+
         toast({
           title: "Business Card Generated!",
           description: `Your PDF is ready for download. Link expires in ${expiresInHours} hours.`,
@@ -87,8 +85,7 @@ export function CardEditor({ onError }: CardEditorProps) {
     } catch (error) {
       const message = error instanceof Error ? error.message : 'An unexpected error occurred';
       onError?.(message);
-      
-      // Show error toast
+
       toast({
         title: "Generation Failed",
         description: message,
@@ -116,136 +113,75 @@ export function CardEditor({ onError }: CardEditorProps) {
 
   return (
     <div className="space-y-6">
-      <CBREStyledCard
-        title="Single Business Card"
-        description="Fill out the form below to generate your business card"
-        className="w-full"
-      >
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <FormFields form={form} isSubmitting={isSubmitting} />
+      <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+        <FormFields form={form} isSubmitting={isSubmitting} />
 
-          {/* Form Actions */}
-          <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t">
-            <CBREButton
-              type="submit"
-              disabled={!isValid || isSubmitting}
-              className="flex-1 sm:flex-none"
-            >
-              {isSubmitting ? (
-                <>
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                  Generating PDF...
-                </>
-              ) : (
-                <>
-                  <FileText className="w-4 h-4 mr-2" />
-                  Generate Business Card
-                </>
-              )}
-            </CBREButton>
-
-            {lastGenerated && (
-              <CBREButton
-                type="button"
-                variant="outline"
-                onClick={handleDownload}
-                className="flex-1 sm:flex-none"
-              >
-                <Download className="w-4 h-4 mr-2" />
-                Download PDF
-              </CBREButton>
+        {/* Form Actions */}
+        <div className="flex flex-wrap items-center gap-3 pt-4">
+          <CBREButton
+            type="submit"
+            disabled={!isValid || isSubmitting}
+          >
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <FileText className="w-4 h-4 mr-2" />
+                Generate Business Card
+              </>
             )}
+          </CBREButton>
 
+          {lastGenerated && (
             <CBREButton
               type="button"
-              variant="text"
-              onClick={handleReset}
-              disabled={isSubmitting}
-              className="flex-1 sm:flex-none"
+              variant="outline"
+              onClick={handleDownload}
             >
-              Reset Form
+              <Download className="w-4 h-4 mr-2" />
+              Download PDF
             </CBREButton>
+          )}
+
+          <CBREButton
+            type="button"
+            variant="text"
+            onClick={handleReset}
+            disabled={isSubmitting}
+          >
+            Reset Form
+          </CBREButton>
+        </div>
+
+        {/* Success Message */}
+        {lastGenerated && (
+          <div className="bg-emerald-50 border border-emerald-200 rounded-md p-4">
+            <div className="flex items-center gap-2 text-emerald-800">
+              <CheckCircle className="w-5 h-5 flex-shrink-0" />
+              <span className="font-medium">
+                Business card generated successfully!
+              </span>
+            </div>
+            <p className="text-emerald-700 text-sm mt-1 ml-7">
+              Your PDF is ready for download. Files expire after 24 hours.
+            </p>
           </div>
-
-          {/* Success Message */}
-          {lastGenerated && (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-green-800">
-                <CheckCircle className="w-5 h-5" />
-                <span className="font-medium">
-                  Business card generated successfully!
-                </span>
-              </div>
-              <p className="text-green-700 text-sm mt-1">
-                Your PDF is ready for download. Files expire after 24 hours.
-              </p>
-            </div>
-          )}
-
-          {/* Form Validation Summary */}
-          {Object.keys(errors).length > 0 && (
-            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-              <div className="flex items-center gap-2 text-red-800 mb-2">
-                <FileText className="w-5 h-5" />
-                <span className="font-medium">
-                  Please fix the following errors:
-                </span>
-              </div>
-              <ul className="text-red-700 text-sm space-y-1">
-                {Object.entries(errors).map(([field, error]) => (
-                  <li key={field} className="flex items-start gap-1">
-                    <span className="text-red-500">•</span>
-                    <span>
-                      {field.charAt(0).toUpperCase() + field.slice(1).replace(/([A-Z])/g, ' $1')}:
-                      {' '}{error?.message}
-                    </span>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </form>
-      </CBREStyledCard>
+        )}
+      </form>
 
       {/* Tips Section */}
-      <CBREStyledCard
-        title="Tips for Better Results"
-        description="Follow these guidelines for professional business cards"
-        className="w-full"
-      >
-        <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <h4 className="font-medium text-cbre-green">Design Selection</h4>
-              <p className="text-sm text-gray-600">
-                Choose Design 1 for a classic layout with prominent contact information,
-                or Design 2 for a more modern approach with emphasized titles.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <h4 className="font-medium text-cbre-green">Bleed Settings</h4>
-              <p className="text-sm text-gray-600">
-                Enable 3mm bleed if you're printing professionally. This ensures
-                no white edges appear when the card is cut to size.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <h4 className="font-medium text-cbre-green">Text Length</h4>
-              <p className="text-sm text-gray-600">
-                Keep titles concise and addresses clear. Long text may be automatically
-                adjusted to fit within the card design.
-              </p>
-            </div>
-            <div className="space-y-2">
-              <h4 className="font-medium text-cbre-green">Contact Information</h4>
-              <p className="text-sm text-gray-600">
-                Include country codes for international contacts and ensure
-                all phone numbers are accurate and properly formatted.
-              </p>
-            </div>
-          </div>
+      <section className="pt-6 border-t border-gray-200">
+        <h3 className="text-base font-semibold text-gray-900 mb-4">Tips for Better Results</h3>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-3 text-sm text-gray-500">
+          <p><span className="text-gray-700 font-medium">Bleed Settings:</span> Enable 3mm bleed for professional printing to avoid white edges.</p>
+          <p><span className="text-gray-700 font-medium">Text Length:</span> Keep titles concise. Long text may be auto-adjusted.</p>
+          <p><span className="text-gray-700 font-medium">Contact Info:</span> Include country codes for international numbers.</p>
+          <p><span className="text-gray-700 font-medium">Address:</span> Use clear, properly formatted addresses.</p>
         </div>
-      </CBREStyledCard>
+      </section>
     </div>
   );
-} 
+}

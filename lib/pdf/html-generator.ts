@@ -28,15 +28,15 @@ export interface HTMLPDFGeneratorOptions {
 export class HTMLPDFGenerator {
   private options: HTMLPDFGeneratorOptions;
 
-  constructor(options: HTMLPDFGeneratorOptions = { includeBleed: false }) {
+  constructor(options: HTMLPDFGeneratorOptions = { includeBleed: true }) {
     this.options = {
-      includeBleed: false,
+      includeBleed: true,
       ...options
     };
   }
 
   private generateHTML(data: BusinessCardData): string {
-    const { width, height } = this.options.includeBleed 
+    const { width, height } = this.options.includeBleed
       ? { width: CARD_DIMENSIONS.bleedWidth, height: CARD_DIMENSIONS.bleedHeight }
       : { width: CARD_DIMENSIONS.width, height: CARD_DIMENSIONS.height };
 
@@ -46,10 +46,10 @@ export class HTMLPDFGenerator {
     // Use absolute URLs for production, relative for development
     const isProduction = process.env.NODE_ENV === 'production';
     const fontBaseUrl = isProduction ? 'https://cbre-business-card.vercel.app' : '';
-    
+
     // Green stripe width: 3mm normal, 6mm with bleed (extends 3mm left into bleed area)
     const greenStripeWidth = this.options.includeBleed ? '6mm' : '3mm';
-    
+
     // Content positioning: shift 3mm inward when bleed is enabled to maintain original design
     const bleedOffset = this.options.includeBleed ? 3 : 0;
 
@@ -117,7 +117,7 @@ export class HTMLPDFGenerator {
               height: ${height * 2}mm;
               font-family: 'Calibre', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Arial, sans-serif;
               font-weight: 300;
-              background-color: #f8f8f8;
+              background-color: transparent;
               overflow: hidden;
             }
             
@@ -129,23 +129,13 @@ export class HTMLPDFGenerator {
               position: relative;
             }
             
-            .back-card-table {
-              width: 100%;
-              height: 100%;
-              border-collapse: collapse;
-              table-layout: fixed;
-              position: relative;
-              margin: 0;
-              padding: 0;
-            }
-            
-            .back-card-table td {
-              width: 100%;
-              height: 100%;
+            .back-card-content {
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              bottom: 0;
               background-color: #003F2D !important;
-              margin: 0;
-              padding: 0;
-              position: relative;
               -webkit-print-color-adjust: exact;
               print-color-adjust: exact;
               color-adjust: exact;
@@ -482,7 +472,7 @@ export class HTMLPDFGenerator {
           </style>
         </head>
         <body>
-          <div style="width: ${width}mm; height: ${height}mm; margin: 0; padding: 0; position: relative; page-break-after: always; background-color: #f8f8f8;">
+          <div style="width: ${width}mm; height: ${height}mm; margin: 0; padding: 0; position: relative; page-break-after: always; background-color: #f8f8f8; overflow: hidden;">
             ${frontHTML}
             <!-- Crop marks for professional printing (front side) -->
             <div class="crop-marks">
@@ -492,7 +482,7 @@ export class HTMLPDFGenerator {
               <div class="crop-mark-front crop-mark-bottom-right"></div>
             </div>
           </div>
-          <div style="width: ${width}mm; height: ${height}mm; margin: 0; padding: 0; position: relative; page-break-before: always;">
+          <div class="back-card-wrapper" style="width: ${width}mm; height: ${height}mm; margin: 0; padding: 0; position: relative; page-break-before: always; background-color: #003F2D;">
             ${backHTML}
             <!-- Crop marks for professional printing (back side) -->
             <div class="crop-marks">
@@ -581,29 +571,25 @@ export class HTMLPDFGenerator {
 
   private generateBackHTML(data: BusinessCardData, width: number, height: number): string {
     const bleedOffset = this.options.includeBleed ? 3 : 0;
-    
+
     return `
-      <table class="back-card-table">
-        <tr>
-          <td>
-            <!-- Recycle Icon -->
-            <svg style="width: 6mm; height: 6mm; fill: rgba(255, 255, 255, 0.5); position: absolute; bottom: ${5 + bleedOffset}mm; right: ${5 + bleedOffset}mm;" viewBox="0 -8 72 72" xmlns="http://www.w3.org/2000/svg">
-              <path d="M24.42,30.55,27,32.1c.42,0,.64-.18.64-.53a2.3,2.3,0,0,0-.3-.94l-5.6-10.51-12.39.3a.78.78,0,0,0-.84.87c0,.13.18.3.53.53l2.57,1.55L8.84,27.6a6.15,6.15,0,0,0-1.13,3A4.91,4.91,0,0,0,8.46,33l8.43,14.7a12.58,12.58,0,0,1-.3-2.64A8,8,0,0,1,18,40.64l6.43-10.09Z"/>
-              <path d="M27.67,22,34.62,11.2q-3.9-8.88-8.28-8.88c-1.76,0-2.94.49-3.55,1.47L16.21,14.3,27.67,22Z"/>
-              <path d="M22,51.15H35.41V37.2H22.49a47.41,47.41,0,0,0-3,4.61,8.66,8.66,0,0,0-1,3.93q0,5.41,3.48,5.41Z"/>
-              <path d="M49.63,19.4l6-10a2.22,2.22,0,0,0,.3-1.1c0-.45-.15-.68-.45-.68a2.53,2.53,0,0,1-.61.23L52.12,9,49.63,4.09Q48,.77,43,.77H27.44a12.15,12.15,0,0,1,3.85,1.7q2.39,1.89,4.88,7.1l3.1,6.5L37,17.17a.6.6,0,0,0-.34.61c0,.37.24.59.72.64l12.29,1Z"/>
-              <path d="M55.6,49.07l8.69-15.8a9.69,9.69,0,0,1-4.19,2.95,17.27,17.27,0,0,1-5.18.61H45.24v-2q0-1.17-.57-1.17a.65.65,0,0,0-.6.3L38,44.57l6.35,9.76c.48.73.89,1,1.24.86s.53-.28.53-.56V51.3h5.37a4.33,4.33,0,0,0,4.16-2.23Z"/>
-              <path d="M51.82,34.82H57.6A6.91,6.91,0,0,0,61.91,33q2.39-1.89,2.38-4a3.47,3.47,0,0,0-.64-1.93l-6.88-10.5L44.94,23.45l6.88,11.37Z"/>
-            </svg>
-          </td>
-        </tr>
-      </table>
+      <div class="back-card-content">
+        <!-- Recycle Icon -->
+        <svg style="width: 6mm; height: 6mm; fill: rgba(255, 255, 255, 0.5); position: absolute; bottom: ${5 + bleedOffset}mm; right: ${5 + bleedOffset}mm;" viewBox="0 -8 72 72" xmlns="http://www.w3.org/2000/svg">
+          <path d="M24.42,30.55,27,32.1c.42,0,.64-.18.64-.53a2.3,2.3,0,0,0-.3-.94l-5.6-10.51-12.39.3a.78.78,0,0,0-.84.87c0,.13.18.3.53.53l2.57,1.55L8.84,27.6a6.15,6.15,0,0,0-1.13,3A4.91,4.91,0,0,0,8.46,33l8.43,14.7a12.58,12.58,0,0,1-.3-2.64A8,8,0,0,1,18,40.64l6.43-10.09Z"/>
+          <path d="M27.67,22,34.62,11.2q-3.9-8.88-8.28-8.88c-1.76,0-2.94.49-3.55,1.47L16.21,14.3,27.67,22Z"/>
+          <path d="M22,51.15H35.41V37.2H22.49a47.41,47.41,0,0,0-3,4.61,8.66,8.66,0,0,0-1,3.93q0,5.41,3.48,5.41Z"/>
+          <path d="M49.63,19.4l6-10a2.22,2.22,0,0,0,.3-1.1c0-.45-.15-.68-.45-.68a2.53,2.53,0,0,1-.61.23L52.12,9,49.63,4.09Q48,.77,43,.77H27.44a12.15,12.15,0,0,1,3.85,1.7q2.39,1.89,4.88,7.1l3.1,6.5L37,17.17a.6.6,0,0,0-.34.61c0,.37.24.59.72.64l12.29,1Z"/>
+          <path d="M55.6,49.07l8.69-15.8a9.69,9.69,0,0,1-4.19,2.95,17.27,17.27,0,0,1-5.18.61H45.24v-2q0-1.17-.57-1.17a.65.65,0,0,0-.6.3L38,44.57l6.35,9.76c.48.73.89,1,1.24.86s.53-.28.53-.56V51.3h5.37a4.33,4.33,0,0,0,4.16-2.23Z"/>
+          <path d="M51.82,34.82H57.6A6.91,6.91,0,0,0,61.91,33q2.39-1.89,2.38-4a3.47,3.47,0,0,0-.64-1.93l-6.88-10.5L44.94,23.45l6.88,11.37Z"/>
+        </svg>
+      </div>
     `;
   }
 
   async generatePDF(data: BusinessCardData): Promise<Buffer> {
     const isProduction = process.env.NODE_ENV === 'production';
-    
+
     const browser = await puppeteer.launch({
       args: isProduction ? chromium.args : [
         '--no-sandbox',
@@ -614,19 +600,34 @@ export class HTMLPDFGenerator {
       executablePath: isProduction ? await chromium.executablePath() : undefined,
       headless: true
     });
-    
+
     try {
       const page = await browser.newPage();
+      
+      const { width, height } = this.options.includeBleed
+        ? { width: CARD_DIMENSIONS.bleedWidth, height: CARD_DIMENSIONS.bleedHeight }
+        : { width: CARD_DIMENSIONS.width, height: CARD_DIMENSIONS.height };
+      
+      // Convert mm to pixels (96 DPI is standard for web, but use higher for print quality)
+      const mmToPixels = (mm: number) => Math.ceil(mm * 96 / 25.4);
+      
+      // Set viewport to match PDF dimensions exactly
+      await page.setViewport({
+        width: mmToPixels(width),
+        height: mmToPixels(height * 2), // Both pages
+        deviceScaleFactor: 2 // Higher quality rendering
+      });
+      
       const html = this.generateHTML(data);
-      
+
       await page.setContent(html, { waitUntil: 'networkidle0' });
-      
+
       // Wait for fonts to load with longer timeout
       await page.evaluateHandle('document.fonts.ready');
-      
+
       // Additional wait to ensure fonts are fully loaded
       await new Promise(resolve => setTimeout(resolve, 2000));
-      
+
       // Force font check
       await page.evaluate(() => {
         return new Promise((resolve) => {
@@ -634,8 +635,8 @@ export class HTMLPDFGenerator {
             document.fonts.ready.then(() => {
               // Check if custom fonts are actually loaded
               const fontFaces = Array.from(document.fonts);
-              const customFonts = fontFaces.filter(font => 
-                font.family.includes('Financier Display') || 
+              const customFonts = fontFaces.filter(font =>
+                font.family.includes('Financier Display') ||
                 font.family.includes('Calibre')
               );
               console.log('Custom fonts loaded:', customFonts.length);
@@ -646,15 +647,12 @@ export class HTMLPDFGenerator {
           }
         });
       });
-      
-      const { width, height } = this.options.includeBleed 
-        ? { width: CARD_DIMENSIONS.bleedWidth, height: CARD_DIMENSIONS.bleedHeight }
-        : { width: CARD_DIMENSIONS.width, height: CARD_DIMENSIONS.height };
-      
+
       const pdfBuffer = await page.pdf({
         width: `${width}mm`,
-        height: `${height}mm`, // Single business card height per page
+        height: `${height}mm`,
         printBackground: true,
+        preferCSSPageSize: true,
         margin: {
           top: 0,
           right: 0,
@@ -662,9 +660,9 @@ export class HTMLPDFGenerator {
           left: 0
         }
       });
-       
-       return Buffer.from(pdfBuffer);
-      
+
+      return Buffer.from(pdfBuffer);
+
     } finally {
       await browser.close();
     }
